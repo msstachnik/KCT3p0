@@ -1,0 +1,11 @@
+[Haptik.Library] SUCCESS: Loaded C:\Documents and Settings\Francesco\Documenti\Matlab\KCTv2p0\demos\Haptik.Config.txt from working directory
+[Haptik.Library] FAILURE: Failed to load Haptik.Phantom42OH.dll
+[Haptik.Library] VERBOSE: Trying Fallbacks
+[Haptik.Library] FAILURE: Failed to load Haptik.Phantom42.dll
+[Haptik.Library] FAILURE: Failed to load Haptik.Phantom40.dll
+[Haptik.Library] FAILURE: Failed to load Haptik.Phantom31.dll
+[Haptik.Library] VERBOSE: No more fallbacks... plugin skipped
+[Haptik.Library] SUCCESS: Loaded  Haptik.Delta31.dll
+VERBOSE: 1.1.7.357.20061206[Haptik Library] WARNING: Not all interfaces to library have been released
+[Haptik Library] WARNING: Some plugins are locked. Not all interfaces to devices have been released
+[Haptik.Library] VERBOSE: Unloading...

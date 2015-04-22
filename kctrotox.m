@@ -1,0 +1,44 @@
+%    KCTROTOX - Return the homogeneous matrix for rotation about X-axis
+%
+%    The function computes the homogeneous rotation matrix for rotation about X-axis;
+%    The rotation angle is in radians. 
+%
+%    Usage: H = kctrotox(alpha)
+%
+%    Arguments:
+% 	      alpha = x-axis rotation angle 
+%
+%    Return:
+%             H = 4 x 4 homogeneous rotation matrix
+%
+%    See also: KCTROTOY, KCTROTOZ, KCTTRAN
+%
+
+%    Copyright (c) 2009 Francesco Chinello
+%    Department of Information Engineering
+%    University of Siena
+%
+%    This file is part of KCT (Kuka Control Toolbox).
+%
+%    KCT is free software: you can redistribute it and/or modify
+%    it under the terms of the GNU General Public License as published by
+%    the Free Software Foundation, either version 3 of the License, or
+%    (at your option) any later version.
+%
+%    KCT is distributed in the hope that it will be useful,
+%    but WITHOUT ANY WARRANTY; without even the implied warranty of
+%    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+%    GNU General Public License for more details.
+%
+%    You should have received a copy of the GNU General Public License
+%    along with KCT. If not, see <http://www.gnu.org/licenses/>.
+
+function H=kctrotox(alpha)
+
+alpha = alpha*pi/180;
+
+    H = [1,       0,               0,       0; 
+         0,  cos(alpha), -sin(alpha),       0;
+         0,  sin(alpha),  cos(alpha),       0;
+         0,       0,               0,       1];
+

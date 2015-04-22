@@ -1,0 +1,15 @@
+/// HowTo Compile the mex files for Windows (XP 32 bit)
+
+execute script 
+
+compilekctMEXfileWin32.m
+
+// finished :D ;)
+
+/// HowTo Compile the mex files for MAC or Linux (32 bit)
+
+execute script 
+
+compilekctMEXfileUNIX.m
+
+// finished :D ;)

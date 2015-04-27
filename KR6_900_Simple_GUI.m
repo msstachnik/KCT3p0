@@ -18,7 +18,7 @@ KR6R900.Home  = ...
     [0 0 0 0 0 0
      0 -90 90 0 0 0];
 KR6R900.Workspace = ...
-     [-851.5 901.5 -901.5 901.5 0 1620]; %Xmin Xmax Ymin Ymax Zmin Zmax
+     [-851.5 901.5 -901.5 901.5 -334 1276]; %Xmin Xmax Ymin Ymax Zmin Zmax
 %      -120 156 -180 180 -90 90]; % it is even not consider :)
   
  % in Kuka_KR_6_R_900_documentation.pdf page 5 - bounds of robot

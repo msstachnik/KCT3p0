@@ -47,6 +47,8 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
     global kctrobotlinks
     global kctptfr;
     global kctrotfr;   
+    JointScale = 1.2;       % use to define scale of joint objects
+    JointPrecision = 7;     % use to define numbers of joint objects elements
     
     kw = load('kctrobotbound');
     kctworkspace = kw.kctworkspace;
@@ -74,9 +76,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              'LineWidth', 4, ...
              'color', 'black');
         % Joint1    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
             for k = 1:size(xc,1)
@@ -99,9 +104,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              'LineWidth', 4, ...
              'color', [0.9 0.5 0.2]);
         % Joint2    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
         rMtx = kctrotoz(angleDH(1))*kctrotox(90);
@@ -125,9 +133,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              'LineWidth', 4, ...
              'color',  [0.9 0.5 0.2]);
         % Joint3    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
         rMtx = kctrotoz(angleDH(1))*kctrotox(90);
@@ -161,9 +172,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              'color', [0.9 0.5 0.2]);  
 
         % Joint4    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
         rMtx = kctrotoz(angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotoy(90);
@@ -178,9 +192,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                      'FaceLighting', 'phong');     
         % Joint5    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
         %rMtx = kctrotox(angleDH(4)*pi/180)*kctrotoz(angleDH(1)*pi/180)*kctrotoy((-angleDH(3)-angleDH(2))*pi/180)*kctrotoy(pi/2)*kctrotox(pi/2);
@@ -205,9 +222,12 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
              'LineWidth', 4, ...
              'color',  [0.9 0.5 0.2]);   
         % Joint6    
-        [xc,yc,zc] = cylinder(1, 8);
-        zc(zc==0) = -1/2;
-        zc(zc==1) = 1/2;
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        xc = xc * JointScale;
+        yc = yc * JointScale;
+        zc = zc * JointScale;
+%         zc(zc==0) = -1/2;
+%         zc(zc==1) = 1/2;
         cc = ones(size(xc));
         sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
         rMtx = kctrotoy(90)*kctrotox(-angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotoz(angleDH(4))*kctrotoy(-angleDH(5));

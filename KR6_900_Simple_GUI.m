@@ -1,7 +1,7 @@
 %  Last Update 2015-04-22 01:53 Mateusz Stachnik
 clc;
 clear all;
-close all;
+% close all;
 
 %% Preconditions - parametrization form Kuka_KR_6_R_900_documentation.pdf page 5
 KR6R900.Links = [400 25 480 0 420 80];

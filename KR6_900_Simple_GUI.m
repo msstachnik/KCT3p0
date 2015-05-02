@@ -18,8 +18,8 @@ KR6R900.Home  = ...
     [0 0 0 0 0 0
      0 -90 90 0 0 0];
 KR6R900.Workspace = ...
-     [-851.5 901.5 -901.5 901.5 -334 1276]; %Xmin Xmax Ymin Ymax Zmin Zmax
-%      -120 156 -180 180 -90 90]; % it is even not consider :)
+     [-851.5 901.5 -901.5 901.5 -334 1276 %Xmin Xmax Ymin Ymax Zmin Zmax
+      -120 156 -180 180 -90 90]; % it is even not consider :)
   
  % in Kuka_KR_6_R_900_documentation.pdf page 5 - bounds of robot
 %% initialization of robot
@@ -30,6 +30,32 @@ KR6R900.Workspace = ...
 kctinit('KR6_900') %init robot
 
 %% do some operation to update global variables
+KR6R900.Joint(1).Min = -170; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(1).Max = 170; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+KR6R900.Joint(2).Min = -45; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(2).Max = 190; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+KR6R900.Joint(3).Min = -156; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(3).Max = 120; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+KR6R900.Joint(4).Min = -180; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(4).Max = 180; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+KR6R900.Joint(5).Min = -100; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(5).Max = 100; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+KR6R900.Joint(6).Min = -180; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+KR6R900.Joint(6).Max = 180; %  Last Update 2015-05-02 14:25 Mateusz Stachnik
+
+
+%% save KR6R900 structure to hanlde into the GUI
+
+actual_robot = KR6R900;
+save ActualRobot actual_robot
+
+%%
+
 kctrobotlinks = KR6R900.Links;
 save kctrobotlinks.mat kctrobotlinks
 
@@ -38,6 +64,8 @@ save kctrobotbound.mat kctworkspace
 
 kcthomeposition = KR6R900.Home ;
 save kctrobothome.mat kcthomeposition
+
+
 
 %% init GUI
 kctdrivegui

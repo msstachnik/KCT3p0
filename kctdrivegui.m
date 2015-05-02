@@ -70,7 +70,7 @@ function varargout = kctdrivegui(varargin)
 
 
 % --- Executes just before kctdrivegui is made visible.
-function kctdrivegui_OpeningFcn(hObject, eventdata, handles, varargin)
+function kctdrivegui_OpeningFcn(hObject, ~, handles, varargin)
     % This function has no output args, see OutputFcn.
     % hObject    handle to figure
     % eventdata  reserved - to be defined in a future version of MATLAB
@@ -104,8 +104,8 @@ function kctdrivegui_OpeningFcn(hObject, eventdata, handles, varargin)
         warning on
     % Load robot joint data
         kctdrivegui_initialize(handles, 100);
-        global kcttempposition;
-        global kctrobotlinks;
+        
+        
         global kctguipath;
         kctguipath = [];          
     % Global var for robot bound visualization
@@ -117,7 +117,7 @@ function kctdrivegui_OpeningFcn(hObject, eventdata, handles, varargin)
         guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
-function varargout = kctdrivegui_OutputFcn(hObject, eventdata, handles) 
+function varargout = kctdrivegui_OutputFcn(~, ~, handles) 
     % varargout  cell array for returning output args (see VARARGOUT);
     % hObject    handle to figure
     % eventdata  reserved - to be defined in a future version of MATLAB
@@ -790,10 +790,16 @@ function edit9_CreateFcn(hObject, eventdata, handles)
 % --- Load robot data for initialization.
 function kctdrivegui_initialize(handles, hf_robot)
         % Load robot joint data
+        
+        
         load('kctrobothome.mat');
         load('kctrobotbound.mat');
-
-        format short
+        load('kctrobotlinks.mat');
+        
+        % load KR6R900.Joint
+        load ('ActualRobot.mat')
+        handles.Joint = [actual_robot.Joint];
+        % format short
    
         global kctdrivespace;
         global kcttempposition;
@@ -808,18 +814,19 @@ function kctdrivegui_initialize(handles, hf_robot)
         set(gcf,'CloseRequestFcn',@kct_closeFigure);
         
         % in Kuka_KR_6_R_900_documentation.pdf page 5
-        set(handles.slider1,'Min', -170); %  Last Update 2015-04-22 01:52 Mateusz Stachnik
-        set(handles.slider1,'Max', 170); %  Last Update 2015-04-22 01:52 Mateusz Stachnik
-        set(handles.slider2,'Min', -45); %  Last Update 2015-04-22 01:52 Mateusz Stachnik
-        set(handles.slider2,'Max', 190); %  Last Update 2015-04-22 01:52 Mateusz Stachnik
-        set(handles.slider3,'Min', -156); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
-        set(handles.slider3,'Max', 120); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
-        set(handles.slider4,'Min', -180); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
-        set(handles.slider4,'Max', 180); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
-        set(handles.slider5,'Min', -100); %  Last Update 2015-04-22 01:59 Mateusz Stachnik
-        set(handles.slider5,'Max', 100); %  Last Update 2015-04-22 01:59 Mateusz Stachnik
-        set(handles.slider6,'Min', -180); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
-        set(handles.slider6,'Max', 180); %  Last Update 2015-04-22 01:53 Mateusz Stachnik
+        %  Last Update 2015-05-02 14:35 Mateusz Stachnik
+        set(handles.slider1,'Min', handles.Joint(1).Min); 
+        set(handles.slider1,'Max', handles.Joint(1).Max); 
+        set(handles.slider2,'Min', handles.Joint(2).Min); 
+        set(handles.slider2,'Max', handles.Joint(2).Max);
+        set(handles.slider3,'Min', handles.Joint(3).Min);
+        set(handles.slider3,'Max', handles.Joint(3).Max); 
+        set(handles.slider4,'Min', handles.Joint(4).Min);
+        set(handles.slider4,'Max', handles.Joint(4).Max);
+        set(handles.slider5,'Min', handles.Joint(5).Min); 
+        set(handles.slider5,'Max', handles.Joint(5).Max);
+        set(handles.slider6,'Min', handles.Joint(6).Min); 
+        set(handles.slider6,'Max', handles.Joint(6).Max);
         set(handles.slider1,'Value',kcttempposition(2,1));
         set(handles.slider2,'Value',kcttempposition(2,2));
         set(handles.slider3,'Value',kcttempposition(2,3));

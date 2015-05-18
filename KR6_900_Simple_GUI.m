@@ -71,6 +71,29 @@ save kctrobothome.mat kcthomeposition
 kctdrivegui
 
 
+%%
+for i = 1:50
+    
+    KR6R900.Joint(1).Value = randp(1, KR6R900.Joint(1).Min, KR6R900.Joint(1).Max)
+    KR6R900.Joint(2).Value = randp(1, KR6R900.Joint(2).Min, KR6R900.Joint(2).Max)
+    KR6R900.Joint(3).Value = randp(1, KR6R900.Joint(3).Min, KR6R900.Joint(3).Max)
+    KR6R900.Joint(4).Value = randp(1, KR6R900.Joint(4).Min, KR6R900.Joint(4).Max)
+    KR6R900.Joint(5).Value = randp(1, KR6R900.Joint(5).Min, KR6R900.Joint(5).Max)
+    KR6R900.Joint(6).Value = randp(1, KR6R900.Joint(6).Min, KR6R900.Joint(6).Max)
+    
+    ActualJoint = [KR6R900.Joint.Value];
+    update_kct_gui(ActualJoint) 
+%     kcttempposition(2,1) = i * 10;
+%         kctdrivegui_robotDisplay(100);
+%         pause(1)
+    
+end
+
+
+
+
+%%
+% t = kctclient('192.168.1.0');
 
 
 

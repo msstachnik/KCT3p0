@@ -255,7 +255,7 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
         text(quivX+150*rMtx(1,3),quivY+150*rMtx(2,3),quivZ+150*rMtx(3,3),'y');
         plot3(quivX,quivY,quivZ,'m.')
 
-        % New frame
+%         New frame
         quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,1),kctrotfr(2,1),kctrotfr(3,1),150,'color','r');
         quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,2),kctrotfr(2,2),kctrotfr(3,2),150,'color','g');
         quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,3),kctrotfr(2,3),kctrotfr(3,3),150,'color','b');

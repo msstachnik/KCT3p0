@@ -99,8 +99,8 @@ function kctdrivegui_OpeningFcn(hObject, ~, handles, varargin)
         path_icon = importdata('kcticon/path_icon.bmp');
         set(handles.pushbutton10,'CDATA',path_icon);
     % Zoom button image
-        zoom_icon = importdata('kcticon/zoom_icon.bmp');
-        set(handles.pushbutton9,'CDATA',zoom_icon);
+%         zoom_icon = importdata('kcticon/zoom_icon.bmp');
+%         set(handles.pushbutton9,'CDATA',zoom_icon);
         warning on
     % Load robot joint data
         kctdrivegui_initialize(handles, 100);
@@ -689,6 +689,7 @@ function pushbutton7_Callback(hObject, eventdata, handles)
     % ADD joint frame to joint path vector
         global kctguipath;
         global kcttempposition;
+        
         kctguipath(end+1,:) = kcttempposition(2,:);
         prevstr = get(handles.listbox1, 'String');
         prevstr{end + 1} = 'Point added...';%strcat('Point ',num2str(size(kctguipath,1)));
@@ -704,6 +705,51 @@ function pushbutton8_Callback(hObject, eventdata, handles)
     % handles    structure with handles and user data (see GUIDATA)
     
     % REMOVE joint frame to jopint path vector
+    global kctguipath;
+    global kctshowbound
+    global kcttempposition
+    global kctdrivespace
+
+   kcttempposition(2,:) = [10 20 30 40 50 60];
+   
+
+%         update_kct_gui([10 20 30 40 50 60])
+        
+        
+    kctguipath(end+1,:) = kcttempposition(2,:);
+    prevstr = get(handles.listbox1, 'String');
+    prevstr{end + 1} = 'Point added...';%strcat('Point ',num2str(size(kctguipath,1)));
+    set(handles.listbox1, 'String', prevstr, 'Value', length(prevstr));
+    if size(kctguipath,1) > 1
+        set(handles.pushbutton10, 'Visible', 'on');
+    end
+    
+    % Camera Position
+        kctcampos = campos();
+        kctcamtarget = camtarget();
+        kctcamup = camup();
+        kctcamva = camva();
+        kctcamproj = camproj();
+        kctcamdata = struct('CamPosition',kctcampos,'CamTarget',...
+                     kctcamtarget,'CamUp',kctcamup,'CamVa',kctcamva,...
+                     'CamProj',kctcamproj);
+        clf
+    % Robot display
+        kctdisprobot(kcttempposition(2,:), 100, kctcamdata);
+    % Bound display    
+        if kctshowbound
+            kctdrivegui_bound(kctdrivespace, 100);
+            return
+        end
+        drawnow() 
+
+% --- Executes on button press in pushbutton9.
+function pushbutton9_Callback(hObject, eventdata, handles)
+    % hObject    handle to pushbutton9 (see GCBO)
+    % eventdata  reserved - to be defined in a future version of MATLAB
+    % handles    structure with handles and user data (see GUIDATA)
+
+    % Show selected path point
         global kctguipath;
         global kcttempposition;
         selected = get(handles.listbox1,'Value');
@@ -718,24 +764,8 @@ function pushbutton8_Callback(hObject, eventdata, handles)
         end
         if size(kctguipath,1) < 2
             set(handles.pushbutton10, 'Visible', 'off');
-        end
-
-% --- Executes on button press in pushbutton9.
-function pushbutton9_Callback(hObject, eventdata, handles)
-    % hObject    handle to pushbutton9 (see GCBO)
-    % eventdata  reserved - to be defined in a future version of MATLAB
-    % handles    structure with handles and user data (see GUIDATA)
-
-    % Show selected path point
-    global kctguipath;
-    global kcttempposition;
-    global kctshowbound;
-    global kctdrivespace;
-    if size(kctguipath,1) > 0
-        selected = get(handles.listbox1,'Value');
-        kcttempposition(2,:) = kctguipath(selected,:);
-        kctdrivegui_robotDisplay(100);
-    end
+        end    
+    
 
 % --- Executes on button press in pushbutton10.
 function pushbutton10_Callback(hObject, eventdata, handles)
@@ -840,6 +870,10 @@ function kctdrivegui_initialize(handles, hf_robot)
         set(handles.editText_slider5,'String', num2str(kcttempposition(2,5)));
         set(handles.editText_slider6,'String', num2str(kcttempposition(2,6)));
         
+        btn = uicontrol('Style', 'pushbutton', 'String', 'Clear',...
+        'Position', [20 20 50 20],...
+        'Callback', 'cla');  
+        
         
 
 % --- Function for robot bound display.
@@ -921,12 +955,17 @@ switch selection,
     delete(100)
    case 'No'
      return
+     Update_Sliders_Values(handles);
 end
+
+
 
 function kct_closeFigure(src,evnt)
 % User-defined close request function 
 % to display a question dialog box 
 msgboxText{1} =  'Close the kctdrivegui main window!!';
 msgbox(msgboxText,'kctdrivegui warning', 'warn');
+
+
 
 

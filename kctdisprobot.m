@@ -36,23 +36,23 @@
 %    You should have received a copy of the GNU General Public License
 %    along with KCT. If not, see <http://www.gnu.org/licenses/>.
 
-function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
-
-    if nargin>1
-        figure(h_fig);
-    else
-        h_fig = figure();
-    end
-
-    global kctrobotlinks
-    global kctptfr;
-    global kctrotfr;   
+function ROBOT = kctdisprobot(ROBOT)
+% 
+%     if nargin>1
+%         figure(h_fig);
+%     else
+%         h_fig = figure();
+%     end
+    cla
+    angleDH = [ROBOT.Joint.Value];
+    kctrobotlinks = ROBOT.Links;
+    
+    kctptfr = zeros(1,3);
+    kctrotfr = diag(ones(1,3));
     JointScale = 1.2;       % use to define scale of joint objects
     JointPrecision = 7;     % use to define numbers of joint objects elements
     
-    kw = load('kctrobotbound');
-    kctworkspace = kw.kctworkspace;
-    load('kctrobotlinks.mat') %  Last Update 2015-04-22 02:06 Mateusz Stachnik
+    kctworkspace = ROBOT.Workspace;
 
     xlabel('X')
     ylabel('Y')
@@ -66,7 +66,7 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
                   (kctworkspace(1,3)-50) (kctworkspace(1,4)+50)...
                    kctworkspace(1,5) (kctworkspace(1,6)+50)])
             hold on
-        zlim = get(gca, 'ZLim');
+%         zlim = get(gca, 'ZLim');
              
 
         % Link1
@@ -274,3 +274,6 @@ function h_fig = kctdisprobot(angleDH, h_fig, kctcamdata)
         end
         
         drawnow
+        ROBOT.End.X=quivX;
+        ROBOT.End.Y=quivY;
+        ROBOT.End.Z=quivZ;

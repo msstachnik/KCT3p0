@@ -38,5 +38,9 @@ KR6R900.Joint(6).Min = -180;
 KR6R900.Joint(6).Max = 180; 
 KR6R900.Joint(6).Value = KR6R900.Home(2,6);
 
+
+
+save KR6R900 KR6R900
 %%
-kctdisprobot(KR6R900)
+% kctdisprobot(KR6R900)
+KukaGui_V2

@@ -22,7 +22,7 @@ function varargout = KukaGui_V2(varargin)
 
 % Edit the above text to modify the response to help KukaGui_V2
 
-% Last Modified by GUIDE v2.5 23-May-2015 00:36:03
+% Last Modified by GUIDE v2.5 23-May-2015 19:21:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -57,6 +57,8 @@ handles.output = hObject;
 load KR6R900
 handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot(handles.KR6R900);
+
+handles.mess.AXIS_ACT=[0;0;0;13;0;0;10;36;65;88;73;83;95;65;67;84];                 % wiadomoœc o rz¹danie pozycji przegóbów
 
 % Update handles structure
 guidata(hObject, handles);
@@ -560,3 +562,46 @@ function update_edn_of_effector(handles)
 set(handles.X_value, 'String', num2str(handles.KR6R900.End.X,5))                    
 set(handles.Y_value, 'String', num2str(handles.KR6R900.End.Y,5))
 set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z,5))
+
+
+% --- Executes on button press in Init_Communication.
+function Init_Communication_Callback(hObject, eventdata, handles)
+% hObject    handle to Init_Communication (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% %%% TEST:
+% load CommunicationExample
+% joint_message = d2;
+% %%% End of test
+Robot=tcpip('192.168.1.100',7000); % init comunication
+fopen(Robot);
+
+AXIS_ACT=[0;0;0;13;0;0;10;36;65;88;73;83;95;65;67;84];
+
+fwrite(Robot,AXIS_ACT);
+joint_message = fread(Robot,Robot.BytesAvaliable);
+Joints = KukaData2Joint(joint_message);
+if sum(isnan(Joints)) > 0
+    h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Joints read:', num2str(Joints)},'Fail');
+    waitfor(h)                                          % poczekaj na zamkniêcie okna
+else 
+    h = msgbox('Communication OK, position of robot will be updated','Information');
+    waitfor(h)                                          % poczekaj na zamkniêcie okna
+    handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
+    
+    
+    
+    handles.Robot = Robot;
+end
+guidata(hObject, handles);
+
+
+
+function handles = Update_GUI_by_Joints(Joints, handles)
+% funkcja do aktualizacji Gui na podstawie wektora aktualnych pozycji 
+for i=1:length(Joints)
+    handles.KR6R900.Joint(i).Value = Joints(i);
+end
+handles.KR6R900 = kctdisprobot(handles.KR6R900);
+update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
+update_edn_of_effector(handles) 

@@ -9,6 +9,10 @@ ehthumbs.db
 *.rar
 REV*
 
+# any folders
+*/*
+
+
 # Folder config file
 Desktop.ini
 

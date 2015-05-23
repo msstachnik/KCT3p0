@@ -50,7 +50,7 @@ function ROBOT = kctdisprobot(ROBOT)
     kctptfr = zeros(1,3);
     kctrotfr = diag(ones(1,3));
     JointScale = 1.2;       % use to define scale of joint objects
-    JointPrecision = 7;     % use to define numbers of joint objects elements
+    JointPrecision = 5;     % use to define numbers of joint objects elements
     
     kctworkspace = ROBOT.Workspace;
 
@@ -76,7 +76,7 @@ function ROBOT = kctdisprobot(ROBOT)
              'LineWidth', 4, ...
              'color', 'black');
         % Joint1    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -104,7 +104,7 @@ function ROBOT = kctdisprobot(ROBOT)
              'LineWidth', 4, ...
              'color', [0.9 0.5 0.2]);
         % Joint2    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -133,7 +133,7 @@ function ROBOT = kctdisprobot(ROBOT)
              'LineWidth', 4, ...
              'color',  [0.9 0.5 0.2]);
         % Joint3    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -172,7 +172,7 @@ function ROBOT = kctdisprobot(ROBOT)
              'color', [0.9 0.5 0.2]);  
 
         % Joint4    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -192,7 +192,7 @@ function ROBOT = kctdisprobot(ROBOT)
              surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                      'FaceLighting', 'phong');     
         % Joint5    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -222,7 +222,7 @@ function ROBOT = kctdisprobot(ROBOT)
              'LineWidth', 4, ...
              'color',  [0.9 0.5 0.2]);   
         % Joint6    
-        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 Mateusz Stachnik
+        [xc,yc,zc] = sphere(JointPrecision); %  Last Update 2015-04-27 22:49 
         xc = xc * JointScale;
         yc = yc * JointScale;
         zc = zc * JointScale;
@@ -277,3 +277,44 @@ function ROBOT = kctdisprobot(ROBOT)
         ROBOT.End.X=quivX;
         ROBOT.End.Y=quivY;
         ROBOT.End.Z=quivZ;
+        
+        
+
+function H=kctrotox(alpha)
+%    KCTROTOX - Return the homogeneous matrix for rotation about X-axis
+%
+%    The function computes the homogeneous rotation matrix for rotation about X-axis;
+%    The rotation angle is in radians. 
+alpha = alpha*pi/180;
+
+    H = [1,       0,               0,       0; 
+         0,  cos(alpha), -sin(alpha),       0;
+         0,  sin(alpha),  cos(alpha),       0;
+         0,       0,               0,       1];    
+     
+
+function H = kctrotoy(alpha)
+%    KCTROTOY - Return the homogeneous matrix for rotation about Y-axis
+%
+%    The function computes the homogeneous rotation matrix for rotation about Y-axis;
+%    The rotation angle is in radians. 
+alpha = alpha*pi/180;
+
+    H = [cos(alpha), 0,  sin(alpha),  0;
+                 0, 1,           0,  0;
+       -sin(alpha), 0,   cos(alpha),  0;
+                 0, 0,           0,  1];
+             
+
+function H = kctrotoz(alpha)
+%    KCTROTOZ - Return the homogeneous matrix for rotation about Z-axis
+%
+%    The function computes the homogeneous rotation matrix for rotation about Z-axis;
+%    The rotation angle is in radians. 
+alpha = alpha*pi/180;
+
+    H = [cos(alpha), -sin(alpha),  0, 0;
+         sin(alpha),  cos(alpha),  0, 0;
+                  0,           0,  1, 0;
+                  0,           0,  0, 1];             
+        

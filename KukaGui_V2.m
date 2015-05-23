@@ -56,7 +56,7 @@ function KukaGui_V2_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 load KR6R900
 handles.KR6R900 = KR6R900;
-handles.KR6R900 = kctdisprobot(handles.KR6R900)
+handles.KR6R900 = kctdisprobot(handles.KR6R900);
 
 % Update handles structure
 guidata(hObject, handles);
@@ -525,7 +525,7 @@ function Home_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 load KR6R900
 handles.KR6R900 = KR6R900;
-handles.KR6R900 = kctdisprobot(handles.KR6R900)
+handles.KR6R900 = kctdisprobot(handles.KR6R900);
 guidata(hObject, handles);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector

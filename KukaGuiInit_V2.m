@@ -3,13 +3,12 @@ clc;
 clear all;
 close all;
 
-%% preconditions
-%% Preconditions - parametrization form Kuka_KR_6_R_900_documentation.pdf page 5
+%% Preconditions - parametry robota z dokumentacji: Kuka_KR_6_R_900_documentation.pdf page 5
 KR6R900.Links = [400 25 480 0 420 80];
 KR6R900.Name = 'KR6_900';
 KR6R900.Home  = ...
     [0 0 0 0 0 0
-     0 90 -90 0 0 0];
+     0 90 -90 0 0 0]; %dobrane doœwiadczalnie
 KR6R900.Workspace = ...
      [-851.5 901.5 -901.5 901.5 -334 1276 %Xmin Xmax Ymin Ymax Zmin Zmax
       -120 156 -180 180 -100 100];

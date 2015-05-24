@@ -1,35 +1,35 @@
-function varargout = KukaGui_V2(varargin)
-% KUKAGUI_V2 MATLAB code for KukaGui_V2.fig
-%      KUKAGUI_V2, by itself, creates a new KUKAGUI_V2 or raises the existing
+function varargout = KukaGui_V3(varargin)
+% KUKAGUI_V3 MATLAB code for KukaGui_V3.fig
+%      KUKAGUI_V3, by itself, creates a new KUKAGUI_V3 or raises the existing
 %      singleton*.
 %
-%      H = KUKAGUI_V2 returns the handle to a new KUKAGUI_V2 or the handle to
+%      H = KUKAGUI_V3 returns the handle to a new KUKAGUI_V3 or the handle to
 %      the existing singleton*.
 %
-%      KUKAGUI_V2('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in KUKAGUI_V2.M with the given input arguments.
+%      KUKAGUI_V3('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in KUKAGUI_V3.M with the given input arguments.
 %
-%      KUKAGUI_V2('Property','Value',...) creates a new KUKAGUI_V2 or raises the
+%      KUKAGUI_V3('Property','Value',...) creates a new KUKAGUI_V3 or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before KukaGui_V2_OpeningFcn gets called.  An
+%      applied to the GUI before KukaGui_V3_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to KukaGui_V2_OpeningFcn via varargin.
+%      stop.  All inputs are passed to KukaGui_V3_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help KukaGui_V2
+% Edit the above text to modify the response to help KukaGui_V3
 
-% Last Modified by GUIDE v2.5 23-May-2015 19:21:01
+% Last Modified by GUIDE v2.5 24-May-2015 12:13:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @KukaGui_V2_OpeningFcn, ...
-                   'gui_OutputFcn',  @KukaGui_V2_OutputFcn, ...
+                   'gui_OpeningFcn', @KukaGui_V3_OpeningFcn, ...
+                   'gui_OutputFcn',  @KukaGui_V3_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,19 +44,19 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before KukaGui_V2 is made visible.
-function KukaGui_V2_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before KukaGui_V3 is made visible.
+function KukaGui_V3_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to KukaGui_V2 (see VARARGIN)
+% varargin   command line arguments to KukaGui_V3 (see VARARGIN)
 
-% Choose default command line output for KukaGui_V2
+% Choose default command line output for KukaGui_V3
 handles.output = hObject;
-load KR6R900
+load KR6R900_V3
 handles.KR6R900 = KR6R900;
-handles.KR6R900 = kctdisprobot(handles.KR6R900);
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);
 
 handles.mess.AXIS_ACT=[0;0;0;13;0;0;10;36;65;88;73;83;95;65;67;84];                 % wiadomoœc o rz¹danie pozycji przegóbów
 
@@ -65,12 +65,12 @@ guidata(hObject, handles);
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 
 
-% UIWAIT makes KukaGui_V2 wait for user response (see UIRESUME)
+% UIWAIT makes KukaGui_V3 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = KukaGui_V2_OutputFcn(hObject, eventdata, handles) 
+function varargout = KukaGui_V3_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -87,7 +87,7 @@ function PB_random_position_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 handles.KR6R900 = ranodm_position(handles.KR6R900);                                 %ustaw losow¹ pozycje robota
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 % Update handles structure
 guidata(hObject, handles);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
@@ -116,7 +116,7 @@ function S_Joint1_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(1).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint1, 'String', num2str(handles.KR6R900.Joint(1).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -132,7 +132,7 @@ function S_Joint1_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(1).Min);
 set(hObject, 'Max', KR6R900.Joint(1).Max);
 set(hObject, 'Value', KR6R900.Joint(1).Value);
@@ -158,7 +158,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -168,7 +168,7 @@ function T_Joint1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(1).Value));
 guidata(hObject, handles);
 
@@ -183,7 +183,7 @@ function S_Joint2_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(2).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint2, 'String', num2str(handles.KR6R900.Joint(2).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -198,7 +198,7 @@ function S_Joint2_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(2).Min);
 set(hObject, 'Max', KR6R900.Joint(2).Max);
 set(hObject, 'Value', KR6R900.Joint(2).Value);
@@ -226,7 +226,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -242,7 +242,7 @@ function T_Joint2_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(2).Value));
 guidata(hObject, handles);
 
@@ -258,7 +258,7 @@ function S_Joint3_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(3).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint3, 'String', num2str(handles.KR6R900.Joint(3).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -274,7 +274,7 @@ function S_Joint3_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(3).Min);
 set(hObject, 'Max', KR6R900.Joint(3).Max);
 set(hObject, 'Value', KR6R900.Joint(3).Value);
@@ -300,7 +300,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -310,7 +310,7 @@ function T_Joint3_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(3).Value));
 guidata(hObject, handles);
 
@@ -326,7 +326,7 @@ function S_Joint4_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(4).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint4, 'String', num2str(handles.KR6R900.Joint(4).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -342,7 +342,7 @@ function S_Joint4_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(4).Min);
 set(hObject, 'Max', KR6R900.Joint(4).Max);
 set(hObject, 'Value', KR6R900.Joint(4).Value);
@@ -368,7 +368,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -378,7 +378,7 @@ function T_Joint4_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(4).Value));
 guidata(hObject, handles);
 
@@ -394,7 +394,7 @@ function S_Joint5_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(5).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint5, 'String', num2str(handles.KR6R900.Joint(5).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -410,7 +410,7 @@ function S_Joint5_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(5).Min);
 set(hObject, 'Max', KR6R900.Joint(5).Max);
 set(hObject, 'Value', KR6R900.Joint(5).Value);
@@ -436,7 +436,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -446,7 +446,7 @@ function T_Joint5_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(5).Value));
 guidata(hObject, handles);
 
@@ -462,7 +462,7 @@ function S_Joint6_Callback(hObject, eventdata, handles)
 handles.KR6R900.Joint(6).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint6, 'String', num2str(handles.KR6R900.Joint(6).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -478,7 +478,7 @@ function S_Joint6_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(6).Min);
 set(hObject, 'Max', KR6R900.Joint(6).Max);
 set(hObject, 'Value', KR6R900.Joint(6).Value);
@@ -504,7 +504,7 @@ else
     
 end
 
-handles.KR6R900 = kctdisprobot(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
 % Update handles structure
 guidata(hObject, handles);
@@ -515,7 +515,7 @@ function T_Joint6_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(6).Value));
 guidata(hObject, handles);
 
@@ -525,9 +525,9 @@ function Home_Callback(hObject, eventdata, handles)
 % hObject    handle to Home (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load KR6R900
+load KR6R900_V3
 handles.KR6R900 = KR6R900;
-handles.KR6R900 = kctdisprobot(handles.KR6R900);
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);
 guidata(hObject, handles);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
 update_edn_of_effector(handles)                                                     %zaktualizuj wartosci Position end of effector
@@ -602,6 +602,6 @@ function handles = Update_GUI_by_Joints(Joints, handles)
 for i=1:length(Joints)
     handles.KR6R900.Joint(i).Value = Joints(i);
 end
-handles.KR6R900 = kctdisprobot(handles.KR6R900);
+handles.KR6R900 = kctdisprobot_V3(handles.KR6R900);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
 update_edn_of_effector(handles) 

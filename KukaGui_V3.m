@@ -633,7 +633,7 @@ while time < fTimeout
     pause(interval)
     time = time + interval;
     
-    if strcmp(oRobot.TransferStatus, 'idle') && Robot.BytesAvailable > 0
+    if strcmp(oRobot.TransferStatus, 'idle') && oRobot.BytesAvailable > 0
         % jeœli jest ju¿ w iddle to mo¿na dzia³aæ dalej
         break;
     end
@@ -723,9 +723,9 @@ while time < timeout
             break; % poczekaj na zamkniêcie okna
         else % jeœli wszystko ok
             RobotData(i).time = toc;
-            RobotData(i,:).Joints = Joints;
-            RobotData(i,:).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z];
-            
+            RobotData(i).Joints = Joints;
+            RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z];
+            i = i+1;
             handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
             handles.Robot = Robot;
 
@@ -784,48 +784,57 @@ function VIS_Joint_Callback(hObject, eventdata, handles)
 global RobotData;
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
     time = [RobotData.time];
-    Joints = [RobotData.Joints];
-    End = [RobotData.End];
+    for i = 1 : length(RobotData)
+        Joint1(i) = RobotData(i).Joints(1);
+        Joint2(i) = RobotData(i).Joints(2);
+        Joint3(i) = RobotData(i).Joints(3);
+        Joint4(i) = RobotData(i).Joints(4);
+        Joint5(i) = RobotData(i).Joints(5);
+        Joint6(i) = RobotData(i).Joints(6);
+        X(i) = RobotData(i).End(1);
+        Y(i) = RobotData(i).End(2);
+        Z(i) = RobotData(i).End(3);
+    end
     figure(1); %position of joints
     
     subplot(3,2,1) %joint 1
-    plot(time, Joints(:,1))
+    plot(time, Joint1)
     title('Joint 1')
     xlabel('time [s]')
     ylabel('position [deg]')
     
     subplot(3,2,2) %joint 2
-    plot(time, Joints(:,2))
+    plot(time, Joint2(:,2))
     title('Joint 2')
     xlabel('time [s]')
     ylabel('position [deg]')
        
     subplot(3,2,3) %joint 3
-    plot(time, Joints(:,3))
+    plot(time, Joint3)
     title('Joint 3')
     xlabel('time [s]')
     ylabel('position [deg]')
        
     subplot(3,2,4) %joint 4
-    plot(time, Joints(:,4))
+    plot(time, Joint4)
     title('Joint 4')
     xlabel('time [s]')
     ylabel('position [deg]')
        
     subplot(3,2,5) %joint 5
-    plot(time, Joints(:,5))
+    plot(time, Joint5)
     title('Joint 5')
     xlabel('time [s]')
     ylabel('position [deg]')
        
     subplot(3,2,6) %joint 6
-    plot(time, Joints(:,6))
+    plot(time, Joint6)
     title('Joint 6')
     xlabel('time [s]')
     ylabel('position [deg]')
     
     figure(2); %position of end of efector
-    plot3(End(:,1),End(:,2),End(:,3))
+    plot3(X,Y,Z)
     title('position of end of efector')
     xlabel('x [mm]')
     ylabel('y [mm]')

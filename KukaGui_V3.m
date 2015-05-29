@@ -804,7 +804,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     ylabel('position [deg]')
     
     subplot(3,2,2) %joint 2
-    plot(time, Joint2(:,2))
+    plot(time, Joint2)
     title('Joint 2')
     xlabel('time [s]')
     ylabel('position [deg]')

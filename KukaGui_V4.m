@@ -692,7 +692,7 @@ function Y=randp(n,min,max)
 Y=rand(1,n)*(max-min)+min;
 
 function wait_for_BytesAvailable(oRobot, fTimeout) %in seconds
-interval = 0.001;
+interval = 0.01;
 time = interval;
 
 while time < fTimeout
@@ -808,9 +808,9 @@ while time < timeout
         else % jeœli wszystko ok
             RobotData(i).time = toc;
             RobotData(i).Joints = Joints;
-            RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z handles.KR6R900.End.A1 handles.KR6R900.End.A2 handles.KR6R900.End.A3];
-            i = i+1;
             handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
+            RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z handles.KR6R900.End.A1 handles.KR6R900.End.B1 handles.KR6R900.End.C1];
+            i = i+1;
             handles.Robot = Robot;
 
         end
@@ -957,7 +957,7 @@ function S_X_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 X_pos = get(hObject,'Value');
 set(handles.X_value, 'String', num2str(X_pos, 3)); 
-send_request(handles.Robot, 'XP1.X', X_pos)
+send_request(handles, 'XP1.X', X_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -988,7 +988,7 @@ function X_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of X_value as a double
 X_pos = get(hObject,'Value');
 set(handles.S_X, 'Value', num2str(X_pos, 3)); 
-send_request(handles.Robot, 'XP1.X', X_pos)
+send_request(handles, 'XP1.X', X_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1015,7 +1015,7 @@ function S_Y_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 Y_pos = get(hObject,'Value');
 set(handles.Y_value, 'String', num2str(Y_pos, 3)); 
-send_request(handles.Robot, 'XP1.Y', Y_pos)
+send_request(handles, 'XP1.Y', Y_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1046,7 +1046,7 @@ function Y_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of X_value as a double
 Y_pos = get(hObject,'Value');
 set(handles.S_Y, 'Value', num2str(Y_pos, 3)); 
-send_request(handles.Robot, 'XP1.Y', Y_pos)
+send_request(handles, 'XP1.Y', Y_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1072,7 +1072,7 @@ function S_Z_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 Z_pos = get(hObject,'Value');
 set(handles.Z_value, 'String', num2str(Z_pos, 3)); 
-send_request(handles.Robot, 'XP1.Z', Z_pos)
+send_request(handles, 'XP1.Z', Z_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1102,7 +1102,7 @@ function Z_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of Z_value as a double
 Z_pos = get(hObject,'Value');
 set(handles.S_Z, 'Value', num2str(Z_pos, 3)); 
-send_request(handles.Robot, 'XP1.Z', Z_pos)
+send_request(handles, 'XP1.Z', Z_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1127,7 +1127,7 @@ function S_A_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 A_pos = get(hObject,'Value');
 set(handles.A_value, 'String', num2str(A_pos, 3)); 
-send_request(handles.Robot, 'XP1.A', A_pos)
+send_request(handles, 'XP1.A', A_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1157,7 +1157,7 @@ function A_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of A_value as a double
 A_pos = get(hObject,'Value');
 set(handles.S_A, 'Value', num2str(A_pos, 3)); 
-send_request(handles.Robot, 'XP1.A', A_pos)
+send_request(handles, 'XP1.A', A_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1183,7 +1183,7 @@ function S_B_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 B_pos = get(hObject,'Value');
 set(handles.B_value, 'String', num2str(B_pos, 3)); 
-send_request(handles.Robot, 'XP1.B', B_pos)
+send_request(handles, 'XP1.B', B_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1213,7 +1213,7 @@ function B_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of B_value as a double
 B_pos = get(hObject,'Value');
 set(handles.S_B, 'Value', num2str(B_pos, 3)); 
-send_request(handles.Robot, 'XP1.B', B_pos)
+send_request(handles, 'XP1.B', B_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1239,7 +1239,7 @@ function S_C_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 C_pos = get(hObject,'Value');
 set(handles.C_value, 'String', num2str(C_pos, 3)); 
-send_request(handles.Robot, 'XP1.C', C_pos)
+send_request(handles, 'XP1.C', C_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1269,7 +1269,7 @@ function C_value_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of C_value as a double
 C_pos = get(hObject,'Value');
 set(handles.S_C, 'Value', num2str(C_pos, 3)); 
-send_request(handles.Robot, 'XP1.C', C_pos)
+send_request(handles, 'XP1.C', C_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1367,13 +1367,16 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-function send_request(Robot, name, data)
+function send_request(handles, name, data)
 % funkcja s³u¿¹ca do wysy³ania poleceñ do robota
 % preconditions
 pre_mess = [0 1 0 15 1 0];
-value = double(num2str(data),5)
-identifier = [length(name) double(name) length(value)];
+value = double(num2str(data,5));
+identifier = [length(name) double(name) 0 length(value)];
 mess = [pre_mess identifier value]';
+mess(4) = length(mess)-4;
+% char(mess')
+% mess'
     
 if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
     Robot = handles.Robot;
@@ -1399,15 +1402,17 @@ function Stop_Communication_Callback(hObject, eventdata, handles)
 handles.CommunicationSts = 0;
 if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
     
-    if strcmp(Robot.Status,'closed') %sprawdzenie czy Robot jest ju¿ w stanie closed
+    if strcmp(handles.Robot.Status,'closed') %sprawdzenie czy Robot jest ju¿ w stanie closed
     
     else
-        fclose(Robot);
+        fclose(handles.Robot);
     end
     
 else
     % nie trzeba nic robiæ
 end
+update_panels(handles)
+guidata(hObject, handles);
 
 
 

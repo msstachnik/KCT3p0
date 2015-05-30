@@ -10,7 +10,7 @@ KR6R900.Home  = ...
     [0 0 0 0 0 0
      90 -90 90 0 0 -45]; % dobrane na podstawie odczytu zakresu ruchów robota 24-05-2015  
 KR6R900.Workspace = ...
-     [-851.5 901.5 -901.5 901.5 -334 1276 %Xmin Xmax Ymin Ymax Zmin Zmax
+     [-851.5 901.5 -901.5 901.5 -334 1376 %Xmin Xmax Ymin Ymax Zmin Zmax
       -120 156 -180 180 -100 100];
   
 %% dobrane na podstawie odczytu zakresu ruchów robota 24-05-2015  

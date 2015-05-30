@@ -278,6 +278,7 @@ function ROBOT = kctdisprobot_V3(ROBOT)
         ROBOT.End.X=quivX;
         ROBOT.End.Y=quivY;
         ROBOT.End.Z=quivZ;
+        ROBOT = rotox_to_angles(rMtx, ROBOT);
         
         
 
@@ -317,5 +318,11 @@ alpha = alpha*pi/180;
     H = [cos(alpha), -sin(alpha),  0, 0;
          sin(alpha),  cos(alpha),  0, 0;
                   0,           0,  1, 0;
-                  0,           0,  0, 1];             
+                  0,           0,  0, 1];
+
+
+
+                  
+                  
+                  
         

@@ -44,4 +44,4 @@ KR6R900.display = 1;
 save KR6R900_V3 KR6R900
 %%
 % kctdisprobot(KR6R900)
-KukaGui_V3
+KukaGui_V4

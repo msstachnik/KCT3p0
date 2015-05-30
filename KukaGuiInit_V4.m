@@ -8,8 +8,7 @@ KR6R900.Links = [400 25 455 35 420 80];
 KR6R900.Name = 'KR6_900';
 KR6R900.Home  = ...
     [0 0 0 0 0 0
-    72.1 -23 69.1 33.5 2.56e-15 -0.248];
-%      90 -90 90 0 0 -45]; % dobrane na podstawie odczytu zakresu ruchów robota 24-05-2015  
+     90 -90 90 0 0 -45]; % dobrane na podstawie odczytu zakresu ruchów robota 24-05-2015  
 KR6R900.Workspace = ...
      [-851.5 901.5 -901.5 901.5 -334 1276 %Xmin Xmax Ymin Ymax Zmin Zmax
       -120 156 -180 180 -100 100];
@@ -44,4 +43,4 @@ KR6R900.display = 1;
 save KR6R900_V3 KR6R900
 %%
 % kctdisprobot(KR6R900)
-KukaGui_V3
+KukaGui_V4

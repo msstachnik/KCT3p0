@@ -6,7 +6,7 @@ function varargout = KukaGui_V4(varargin)
 %      H = KUKAGUI_V4 returns the handle to a new KUKAGUI_V4 or the handle to
 %      the existing singleton*.
 %
-%      KUKAGUI_V4('CALLBACK',hObject,eventData,handles,...) calls the local
+%      KUKAGUI_V4('CALLBACK',hObject,~,handles,...) calls the local
 %      function named CALLBACK in KUKAGUI_V4.M with the given input arguments.
 %
 %      KUKAGUI_V4('Property','Value',...) creates a new KUKAGUI_V4 or raises the
@@ -45,7 +45,7 @@ end
 
 
 % --- Executes just before KukaGui_V4 is made visible.
-function KukaGui_V4_OpeningFcn(hObject, eventdata, handles, varargin)
+function KukaGui_V4_OpeningFcn(hObject, ~, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -53,6 +53,10 @@ function KukaGui_V4_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to KukaGui_V4 (see VARARGIN)
 
 % Choose default command line output for KukaGui_V4
+
+% funkcja wywo³ywana przed pojawieniem sie GUI wywi³uje wszyskie
+% preconditions opróc Create_function
+
 handles.output = hObject;
 load KR6R900_V4
 handles.KR6R900 = KR6R900;
@@ -73,7 +77,7 @@ update_panels(handles)                                                     %zakt
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = KukaGui_V4_OutputFcn(hObject, eventdata, handles) 
+function varargout = KukaGui_V4_OutputFcn(~, ~, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -84,11 +88,13 @@ varargout{1} = handles.output;
 
 
 % --- Executes on button press in PB_random_position.
-function PB_random_position_Callback(hObject, eventdata, handles)
+function PB_random_position_Callback(hObject, ~, handles)
 % hObject    handle to PB_random_position (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% funckaj do ustawiania losowej pozycji robota z przestrzeni dostepnych
+% ruchów
 handles.KR6R900 = ranodm_position(handles.KR6R900);                                 %ustaw losow¹ pozycje robota
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);                                    %zaktualizuj po³o¿enie robota
 % Update handles structure
@@ -98,7 +104,8 @@ update_panels(handles)                                                     %zakt
 
 
 function Robot = ranodm_position(Robot)
-% Funkcja u¿ywana do ustalania losowej pozycji robota
+% Funkcja u¿ywana do ustalania losowej pozycji robota u¿ywana w wywo³aniu 
+% PB_random_position_Callback
 Robot.Joint(1).Value = randp(1, Robot.Joint(1).Min, Robot.Joint(1).Max);            %ustalanie losowej pozycji w zaleznoœci od ograniczeñ
 Robot.Joint(2).Value = randp(1, Robot.Joint(2).Min, Robot.Joint(2).Max);
 Robot.Joint(3).Value = randp(1, Robot.Joint(3).Min, Robot.Joint(3).Max);
@@ -106,15 +113,22 @@ Robot.Joint(4).Value = randp(1, Robot.Joint(4).Min, Robot.Joint(4).Max);
 Robot.Joint(5).Value = randp(1, Robot.Joint(5).Min, Robot.Joint(5).Max);
 Robot.Joint(6).Value = randp(1, Robot.Joint(6).Min, Robot.Joint(6).Max);
 
+function Y=randp(n,min,max)
+%rand of size n from min to max
+Y=rand(1,n)*(max-min)+min;
 
 % --- Executes on slider movement.
-function S_Joint1_Callback(hObject, eventdata, handles)
+function S_Joint1_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+% Ka¿dy sukaw ma w zasadzie tak¹ sam¹ strukture wywo³ania. Pobierana jest
+% wartoœæ suwaka do struktury robota, nastepnie aktualizowana jest wartoœæ
+% tekstowa w GUI, a na koñcu aktualizowana jest pozycja robota
 
 handles.KR6R900.Joint(1).Value = get(hObject,'Value');                              % pobierz wartoœæ z slidera
 set(handles.T_Joint1, 'String', num2str(handles.KR6R900.Joint(1).Value, 3));        % zaktualizuj wartoœæ polu tekstowym
@@ -127,12 +141,16 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint1_CreateFcn(hObject, eventdata, handles)
+function S_Joint1_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: slider controls usually have a light gray background.
+
+% Ka¿dy suwak ma t¹ sam¹ strukture inicjalizacji po pierwsze wczytywana
+% jest struktura robota po drugie okreœlane s¹ wartosci minimalne i
+% maksymalne a po trzecie okreslana jest wartoœæ pocz¹tkowa suwaka
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -145,10 +163,14 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in T_Joint1.
-function T_Joint1_Callback(hObject, eventdata, handles)
+function T_Joint1_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% Ka¿de odwo³anie tekstowe ma podobn¹ strukture najpierw pobierana jest
+% wartoœæ, nasepnie sprawdzany jest warunek czy pobrana wartoœæ mieœci siê
+% w dopuszczalnych zakresach, a na koñcu uakatualniana jest pozycja robota
 Value = str2double(get(hObject,'String'));
 Min = get(handles.S_Joint1, 'Min');
 Max = get(handles.S_Joint1, 'Max');
@@ -168,16 +190,18 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint1_CreateFcn(hObject, eventdata, handles)
+function T_Joint1_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+% Ka¿da inicjalizacja tekstu ma podobn¹ strukture, najpierw wczytywana jest
+% struktura robota a nastepnie zapisywana jest wartosæ domyœlna tekstu
 load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(1).Value));
 guidata(hObject, handles);
 
 % --- Executes on slider movement.
-function S_Joint2_Callback(hObject, eventdata, handles)
+function S_Joint2_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -193,7 +217,7 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint2_CreateFcn(hObject, eventdata, handles)
+function S_Joint2_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -210,7 +234,7 @@ set(hObject, 'String', num2str(KR6R900.Joint(2).Value));
 guidata(hObject, handles);
 
 
-function T_Joint2_Callback(hObject, eventdata, handles)
+function T_Joint2_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -236,7 +260,7 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint2_CreateFcn(hObject, eventdata, handles)
+function T_Joint2_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -251,7 +275,7 @@ set(hObject, 'String', num2str(KR6R900.Joint(2).Value));
 guidata(hObject, handles);
 
 % --- Executes on slider movement.
-function S_Joint3_Callback(hObject, eventdata, handles)
+function S_Joint3_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -269,7 +293,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint3_CreateFcn(hObject, eventdata, handles)
+function S_Joint3_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -287,7 +311,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in T_Joint3.
-function T_Joint3_Callback(hObject, eventdata, handles)
+function T_Joint3_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -310,7 +334,7 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint3_CreateFcn(hObject, eventdata, handles)
+function T_Joint3_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -319,7 +343,7 @@ set(hObject, 'String', num2str(KR6R900.Joint(3).Value));
 guidata(hObject, handles);
 
 % --- Executes on slider movement.
-function S_Joint4_Callback(hObject, eventdata, handles)
+function S_Joint4_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -337,7 +361,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint4_CreateFcn(hObject, eventdata, handles)
+function S_Joint4_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -355,7 +379,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in T_Joint4.
-function T_Joint4_Callback(hObject, eventdata, handles)
+function T_Joint4_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -378,7 +402,7 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint4_CreateFcn(hObject, eventdata, handles)
+function T_Joint4_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -387,7 +411,7 @@ set(hObject, 'String', num2str(KR6R900.Joint(4).Value));
 guidata(hObject, handles);
 
 % --- Executes on slider movement.
-function S_Joint5_Callback(hObject, eventdata, handles)
+function S_Joint5_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -405,7 +429,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint5_CreateFcn(hObject, eventdata, handles)
+function S_Joint5_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -423,7 +447,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in T_Joint5.
-function T_Joint5_Callback(hObject, eventdata, handles)
+function T_Joint5_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -446,7 +470,7 @@ update_panels(handles)                                                     %zakt
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint5_CreateFcn(hObject, eventdata, handles)
+function T_Joint5_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -455,7 +479,7 @@ set(hObject, 'String', num2str(KR6R900.Joint(5).Value));
 guidata(hObject, handles);
 
 % --- Executes on slider movement.
-function S_Joint6_Callback(hObject, eventdata, handles)
+function S_Joint6_Callback(hObject, ~, handles)
 % hObject    handle to S_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -473,7 +497,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function S_Joint6_CreateFcn(hObject, eventdata, handles)
+function S_Joint6_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -491,7 +515,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in T_Joint6.
-function T_Joint6_Callback(hObject, eventdata, handles)
+function T_Joint6_Callback(hObject, ~, handles)
 % hObject    handle to T_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -515,7 +539,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function T_Joint6_CreateFcn(hObject, eventdata, handles)
+function T_Joint6_CreateFcn(hObject, ~, handles)
 % hObject    handle to T_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -525,19 +549,25 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in Home.
-function Home_Callback(hObject, eventdata, handles)
+function Home_Callback(hObject, ~, handles)
 % hObject    handle to Home (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% funkcja s³u¿¹ca do przywrócenia pozycji pocz¹kwej. W tym celu musi byc
+% zaczytana struktura robota - która nie powinna siê zmieniaæ przez czas
+% dzialania toolboxa, nastepnie aktualizaowany jest robot jak i wartosci na
+% panelu
 load KR6R900_V4
 handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 guidata(hObject, handles);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
-update_panels(handles)                                                     %zaktualizuj wartosci Position end of effector
+
 
 function update_panels(handles)
-
+% funkcja s³u¿aca do uaktualnienia wartoœci pól w panelach na podstawie
+% aktualanej pozycji robota
 precision = 5;
 set(handles.S_Joint1, 'String', handles.KR6R900.Joint(1).Value);                    % zaktualizuj wartoœc slidera
 set(handles.S_Joint1, 'Value', handles.KR6R900.Joint(1).Value);                     % zaktualizuj wartoœc slidera
@@ -627,26 +657,33 @@ else
     set(handles.Communications_Status, 'String', 'off');
 
 end
+set(handles.RobotDisplay, 'Value' ,handles.KR6R900.display);
 
 
-
-
-function update_1edn_of_effector(handles)
-% funckja s³u¿¹ca do aktualizacji wizualizzacji pocyji koñcówki efektora
-precision = 3;
-set(handles.X_value, 'String', num2str(handles.KR6R900.End.X,precision))                    
-set(handles.Y_value, 'String', num2str(handles.KR6R900.End.Y,precision))
-set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z,precision))
-set(handles.A_value, 'String', num2str(handles.KR6R900.End.A1,precision))                    
-set(handles.B_value, 'String', num2str(handles.KR6R900.End.B1,precision))
-set(handles.C_value, 'String', num2str(handles.KR6R900.End.C1,precision))
+% 
+% function update_1edn_of_effector(handles)
+% % funckja s³u¿¹ca do aktualizacji wizualizzacji pocyji koñcówki efektora
+% % niepotrzebna - wszystko odbywa siê w update_panels
+% precision = 3;
+% set(handles.X_value, 'String', num2str(handles.KR6R900.End.X,precision))                    
+% set(handles.Y_value, 'String', num2str(handles.KR6R900.End.Y,precision))
+% set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z,precision))
+% set(handles.A_value, 'String', num2str(handles.KR6R900.End.A1,precision))                    
+% set(handles.B_value, 'String', num2str(handles.KR6R900.End.B1,precision))
+% set(handles.C_value, 'String', num2str(handles.KR6R900.End.C1,precision))
 
 
 % --- Executes on button press in Init_Communication.
-function Init_Communication_Callback(hObject, eventdata, handles)
+function Init_Communication_Callback(hObject, ~, handles)
 % hObject    handle to Init_Communication (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% funkcja s³u¿¹ca do zainicjowania po³¹czania tcpip, najpierw sprawdzane
+% jest czy takie po³¹czenie nie zosta³o ju¿ zainicjonowane, jeœli by³o
+% zainicjonowane to nastepuje procedura pobrania aktualnej pozyci robota i
+% zaktualizowania pozcyji robota (wizualizacja) na podstawie tej wiadomoœci 
+
 % %%% TEST:
 % load CommunicationExample
 % joint_message = d2;
@@ -689,8 +726,7 @@ handles.CommunicationSts = 1; % there is communication
 update_panels(handles) 
 guidata(hObject, handles);
 
-% Robot.Status
-% Robot.TransferStatus
+
 
 function handles = Update_GUI_by_Joints(Joints, handles)
 % funkcja do aktualizacji Gui na podstawie wektora aktualnych pozycji 
@@ -701,11 +737,11 @@ handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
 
 
-function Y=randp(n,min,max)
-%rand of size n from min to max
-Y=rand(1,n)*(max-min)+min;
+
 
 function wait_for_BytesAvailable(oRobot, fTimeout) %in seconds
+% funkcja s³u¿¹ca do oczekiwania na stan spoczynku sieci komunikacyjnej z
+% uwzglenieniem odebrania woadomoœci z aktualna pozycj¹ robota
 interval = 0.01;
 time = interval;
 
@@ -722,6 +758,7 @@ end
 pause(interval)
 
 function wait_for_idle_state(oRobot, fTimeout) %in seconds
+% funkcja s³u¿¹ca do oczekiwania na stan spoczynku sieci komunikacyjnej
 interval = 0.001;
 time = interval;
 
@@ -739,10 +776,14 @@ pause(interval)
 
 
 % --- Executes on button press in Get_Position.
-function Get_Position_Callback(hObject, eventdata, handles)
+function Get_Position_Callback(hObject, ~, handles)
 % hObject    handle to Get_Position (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+%funkcja podobna do Init_Communication_Callback z t¹ ró¿nic¹ ¿e w przypadku
+%odebrania prawid³owej ramki nie jest pokazywany komunikat prawidlowego
+%po³¹czenia
 if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
     Robot = handles.Robot;
 else
@@ -782,11 +823,18 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in Monitor.
-function Monitor_Callback(hObject, eventdata, handles)
+function Monitor_Callback(hObject, ~, handles)
 % hObject    handle to Monitor (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % preconditions
+
+% funkcja pozwalajaca zapisaæ pozcyje robota przez okreslony czas. ko¿ysta
+% ze zmnienej globalnej StopCommand która pozwala na zawnêtrzne wymuszenie
+% zatrzymania pêtli w której pobierane s¹ kolejne wartoœci po³o¿enia
+% robota. Warto zauwa¿yæ ¿e przy wy³¹czonym parametrze 'Display Robot'
+% funkcja ta pobierze wiecej punktów poniewa¿ aktualizacja pozycji robota
+% jest dosyæ czasoch³onna (do 0.1s)
 global RobotData;
 global StopCommand;
 RobotData = []; % wyczysæ zawartosæ RobotData
@@ -850,7 +898,7 @@ update_panels(handles)
 guidata(hObject, handles);
 
 
-function Monitor_Value_Callback(hObject, eventdata, handles)
+function Monitor_Value_Callback(hObject, ~, handles)
 % hObject    handle to Monitor_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -860,7 +908,7 @@ function Monitor_Value_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function Monitor_Value_CreateFcn(hObject, eventdata, handles)
+function Monitor_Value_CreateFcn(hObject, ~, handles)
 % hObject    handle to Monitor_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -873,7 +921,7 @@ end
 
 
 % --- Executes on button press in Stop.
-function Stop_Callback(hObject, eventdata, handles)
+function Stop_Callback(hObject, ~, handles)
 % hObject    handle to Stop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -882,7 +930,7 @@ StopCommand = 1; % u¿ywane w Monitor_Callback
 
 
 % --- Executes on button press in VIS_Joint.
-function VIS_Joint_Callback(hObject, eventdata, handles)
+function VIS_Joint_Callback(hObject, ~, handles)
 % hObject    handle to VIS_Joint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -951,7 +999,7 @@ end
 
 
 % --- Executes on button press in RobotDisplay.
-function RobotDisplay_Callback(hObject, eventdata, handles)
+function RobotDisplay_Callback(hObject, ~, handles)
 % hObject    handle to RobotDisplay (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -966,7 +1014,7 @@ guidata(hObject, handles);
 
 
 % --- Executes on slider movement.
-function S_X_Callback(hObject, eventdata, handles)
+function S_X_Callback(hObject, ~, handles)
 % hObject    handle to S_X (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -979,7 +1027,7 @@ send_request(handles, 'XP1.X', X_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_X_CreateFcn(hObject, eventdata, handles)
+function S_X_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_X (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -997,7 +1045,7 @@ guidata(hObject, handles);
 
 
 
-function X_value_Callback(hObject, eventdata, handles)
+function X_value_Callback(hObject, ~, handles)
 % hObject    handle to X_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1026,7 +1074,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function X_value_CreateFcn(hObject, eventdata, handles)
+function X_value_CreateFcn(hObject, ~, handles)
 % hObject    handle to X_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1040,7 +1088,7 @@ end
 
 
 % --- Executes on slider movement.
-function S_Y_Callback(hObject, eventdata, handles)
+function S_Y_Callback(hObject, ~, handles)
 % hObject    handle to S_Y (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1053,7 +1101,7 @@ send_request(handles, 'XP1.Y', Y_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_Y_CreateFcn(hObject, eventdata, handles)
+function S_Y_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Y (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1071,7 +1119,7 @@ guidata(hObject, handles);
 
 
 
-function Y_value_Callback(hObject, eventdata, handles)
+function Y_value_Callback(hObject, ~, handles)
 % hObject    handle to X_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1095,7 +1143,7 @@ end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function Y_value_CreateFcn(hObject, eventdata, handles)
+function Y_value_CreateFcn(hObject, ~, ~)
 % hObject    handle to X_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1108,7 +1156,7 @@ end
 
 
 % --- Executes on slider movement.
-function S_Z_Callback(hObject, eventdata, handles)
+function S_Z_Callback(hObject, ~, handles)
 % hObject    handle to S_Z (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1121,7 +1169,7 @@ send_request(handles, 'XP1.Z', Z_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_Z_CreateFcn(hObject, eventdata, handles)
+function S_Z_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_Z (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1138,7 +1186,7 @@ guidata(hObject, handles);
 
 
 
-function Z_value_Callback(hObject, eventdata, handles)
+function Z_value_Callback(hObject, ~, handles)
 % hObject    handle to Z_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1162,7 +1210,7 @@ end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function Z_value_CreateFcn(hObject, eventdata, handles)
+function Z_value_CreateFcn(hObject, ~, handles)
 % hObject    handle to Z_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1174,7 +1222,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % --- Executes on slider movement.
-function S_A_Callback(hObject, eventdata, handles)
+function S_A_Callback(hObject, ~, handles)
 % hObject    handle to S_A (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1187,7 +1235,7 @@ send_request(handles, 'XP5.A', A_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_A_CreateFcn(hObject, eventdata, handles)
+function S_A_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_A (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1205,7 +1253,7 @@ guidata(hObject, handles);
 
 
 
-function A_value_Callback(hObject, eventdata, handles)
+function A_value_Callback(hObject, ~, handles)
 % hObject    handle to A_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1229,7 +1277,7 @@ end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function A_value_CreateFcn(hObject, eventdata, handles)
+function A_value_CreateFcn(hObject, ~, handles)
 % hObject    handle to A_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1242,7 +1290,7 @@ end
 
 
 % --- Executes on slider movement.
-function S_B_Callback(hObject, eventdata, handles)
+function S_B_Callback(hObject, ~, handles)
 % hObject    handle to S_B (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1255,7 +1303,7 @@ send_request(handles, 'XP1.B', B_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_B_CreateFcn(hObject, eventdata, handles)
+function S_B_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_B (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1273,7 +1321,7 @@ guidata(hObject, handles);
 
 
 
-function B_value_Callback(hObject, eventdata, handles)
+function B_value_Callback(hObject, ~, handles)
 % hObject    handle to B_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1298,7 +1346,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function B_value_CreateFcn(hObject, eventdata, handles)
+function B_value_CreateFcn(hObject, ~, handles)
 % hObject    handle to B_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1311,7 +1359,7 @@ end
 
 
 % --- Executes on slider movement.
-function S_C_Callback(hObject, eventdata, handles)
+function S_C_Callback(hObject, ~, handles)
 % hObject    handle to S_C (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1324,7 +1372,7 @@ send_request(handles, 'XP5.C', C_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function S_C_CreateFcn(hObject, eventdata, handles)
+function S_C_CreateFcn(hObject, ~, handles)
 % hObject    handle to S_C (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1342,7 +1390,7 @@ guidata(hObject, handles);
 
 
 
-function C_value_Callback(hObject, eventdata, handles)
+function C_value_Callback(hObject, ~, handles)
 % hObject    handle to C_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1367,7 +1415,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function C_value_CreateFcn(hObject, eventdata, handles)
+function C_value_CreateFcn(hObject, ~, handles)
 % hObject    handle to C_value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1380,21 +1428,21 @@ end
 
 
 % --- Executes on button press in pushbutton13.
-function pushbutton13_Callback(hObject, eventdata, handles)
+function pushbutton13_Callback(hObject, ~, handles)
 % hObject    handle to pushbutton13 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
 % --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, eventdata, handles)
+function pushbutton14_Callback(hObject, ~, handles)
 % hObject    handle to pushbutton14 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
 
 
-function A2_Value_Callback(hObject, eventdata, handles)
+function A2_Value_Callback(hObject, ~, handles)
 % hObject    handle to A2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1404,7 +1452,7 @@ function A2_Value_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function A2_Value_CreateFcn(hObject, eventdata, handles)
+function A2_Value_CreateFcn(hObject, ~, handles)
 % hObject    handle to A2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1417,7 +1465,7 @@ end
 
 
 
-function B2_Value_Callback(hObject, eventdata, handles)
+function B2_Value_Callback(hObject, ~, handles)
 % hObject    handle to B2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1427,7 +1475,7 @@ function B2_Value_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function B2_Value_CreateFcn(hObject, eventdata, handles)
+function B2_Value_CreateFcn(hObject, ~, handles)
 % hObject    handle to B2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1440,7 +1488,7 @@ end
 
 
 
-function C2_Value_Callback(hObject, eventdata, handles)
+function C2_Value_Callback(hObject, ~, handles)
 % hObject    handle to C2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1450,7 +1498,7 @@ function C2_Value_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function C2_Value_CreateFcn(hObject, eventdata, handles)
+function C2_Value_CreateFcn(hObject, ~, handles)
 % hObject    handle to C2_Value (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1489,7 +1537,7 @@ handles.CommunicationSts = 1;
 
 
 % --- Executes on button press in Stop_Communication.
-function Stop_Communication_Callback(hObject, eventdata, handles)
+function Stop_Communication_Callback(hObject, ~, handles)
 % hObject    handle to Stop_Communication (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1510,7 +1558,7 @@ guidata(hObject, handles);
 
 
 
-function Logs_Name_Callback(hObject, eventdata, handles)
+function Logs_Name_Callback(hObject, ~, handles)
 % hObject    handle to Logs_Name (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1520,7 +1568,7 @@ function Logs_Name_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function Logs_Name_CreateFcn(hObject, eventdata, handles)
+function Logs_Name_CreateFcn(hObject, ~, handles)
 % hObject    handle to Logs_Name (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -1533,7 +1581,7 @@ end
 
 
 % --- Executes on button press in Save_As_txt.
-function Save_As_txt_Callback(hObject, eventdata, handles)
+function Save_As_txt_Callback(hObject, ~, handles)
 % hObject    handle to Save_As_txt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1580,7 +1628,7 @@ end
 
 
 % --- Executes when user attempts to close figure1.
-function figure1_CloseRequestFcn(hObject, eventdata, handles)
+function figure1_CloseRequestFcn(hObject, ~, handles)
 % hObject    handle to figure1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1590,7 +1638,7 @@ delete(hObject);
 
 
 % --- Executes on button press in Set_Actual_Position.
-function Set_Actual_Position_Callback(hObject, eventdata, handles)
+function Set_Actual_Position_Callback(hObject, ~, handles)
 % hObject    handle to Set_Actual_Position (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1606,7 +1654,7 @@ send_request(handles, 'XP1.Z', Z_pos);
 
 
 % --- Executes on button press in VIS_end_of_efector.
-function VIS_end_of_efector_Callback(hObject, eventdata, handles)
+function VIS_end_of_efector_Callback(hObject, ~, handles)
 % hObject    handle to VIS_end_of_efector (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1644,7 +1692,7 @@ end
 
 
 % --- Executes on button press in VIS_velocity.
-function VIS_velocity_Callback(hObject, eventdata, handles)
+function VIS_velocity_Callback(hObject, ~, handles)
 % hObject    handle to VIS_velocity (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -1715,7 +1763,7 @@ end
 
 
 % --- Executes on button press in VIS_acceleration.
-function VIS_acceleration_Callback(hObject, eventdata, handles)
+function VIS_acceleration_Callback(hObject, ~, handles)
 % hObject    handle to VIS_acceleration (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)

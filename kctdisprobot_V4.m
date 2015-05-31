@@ -43,23 +43,24 @@ function ROBOT = kctdisprobot_V4(ROBOT)
 %     else
 %         h_fig = figure();
 %     end
-
+%% Pobieranie u¿ytecznych wartosci z struktury robota do wyœwietlenia jego pozycji
     angleDH = [ROBOT.Joint.Value];
     angleDH = - angleDH; %odwrotna polaryzacja
     kctrobotlinks = ROBOT.Links;
+    kctworkspace = ROBOT.Workspace;
     display = ROBOT.display; % pobieranie informacji czy pozycja mam byæ wyœwietlana czy tylko zaktualizowane po³ozenia jointów
     
     if display
         cla
     end
-    
+%% dodatkowe predefiniowane zmienne
     kctptfr = zeros(1,3);
     kctrotfr = diag(ones(1,3));
     JointScale = 1.2;       % use to define scale of joint objects
     JointPrecision = 5;     % use to define numbers of joint objects elements
     
-    kctworkspace = ROBOT.Workspace;
-
+    
+%% wyœwietlenie osi
     if display
         xlabel('X')
         ylabel('Y')
@@ -76,7 +77,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
     %         zlim = get(gca, 'ZLim');
 
 
-            % Link1
+%% Link1
             line('xdata', [0;0], ...
                  'ydata', [0;0], ...
                  'zdata', [0;kctrobotlinks(1)], ...
@@ -102,7 +103,10 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                          'FaceLighting', 'phong');
     end
-            % Link2
+%% Link2 
+% mocierze obrotu i pozycja Linków jest zawsze auaktualnianiana bez wzglêdu 
+% czy robot jest wyswietlany czy nie. Pozwala to na wyliczenie pozycji 
+% X Y Z oraz orientacji A B C robota
             rMtx = kctrotoz(angleDH(1));
             vLink2 = rMtx*[kctrobotlinks(2);0;0;1];
             
@@ -133,7 +137,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                          'FaceLighting', 'phong');
     end
-            % Link3
+%% Link3
             rMtx = kctrotoz(angleDH(1))*kctrotoy(-angleDH(2));
             vLink3 = rMtx*[kctrobotlinks(3);0;0;1];
             
@@ -164,7 +168,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                          'FaceLighting', 'phong');
     end
-            % Link4
+%% Link4
             rMtx = kctrotoz(angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotoy(-90);
             vLink4 = rMtx*[kctrobotlinks(4);0;0;1];
     if display        
@@ -174,7 +178,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  'LineWidth', 4, ...
                  'color',  [0.9 0.5 0.2]);              
     end
-            % Link5
+%% Link5
             rMtx = kctrotoz(angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)));
             vLink5 = rMtx*[kctrobotlinks(5);0;0;1];
     if display        
@@ -226,7 +230,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                          'FaceLighting', 'phong');
     end
-            % Link6
+%% Link6
             rMtx = kctrotoz(angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotox(angleDH(4))*kctrotoy(-angleDH(5));%kctrotox(pi/2);
             vLink6 = rMtx*[kctrobotlinks(6);0;0;1];
     if display
@@ -257,7 +261,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
                  surf(xc,yc,zc, cc, 'EdgeColor', 'black', 'FaceColor', 'blue', ...
                          'FaceLighting', 'phong');    
     end
-            % Reference frame of the end-effector
+%% Reference frame of the end-effector
             quivX = vLink2(1)+vLink3(1)+vLink4(1)+vLink5(1)+vLink6(1);
             quivY = vLink2(2)+vLink3(2)+vLink4(2)+vLink5(2)+vLink6(2);
             quivZ = kctrobotlinks(1)+vLink3(3)+vLink4(3)+vLink5(3)+vLink6(3);
@@ -275,7 +279,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
             text(quivX+150*rMtx(1,3),quivY+150*rMtx(2,3),quivZ+150*rMtx(3,3),'y');
             plot3(quivX,quivY,quivZ,'m.')
 
-    %         New frame
+%         New frame
             quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,1),kctrotfr(2,1),kctrotfr(3,1),150,'color','r');
             quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,2),kctrotfr(2,2),kctrotfr(3,2),150,'color','g');
             quiver3(kctptfr(1,1),kctptfr(1,2),kctptfr(1,3),kctrotfr(1,3),kctrotfr(2,3),kctrotfr(3,3),150,'color','b');
@@ -295,14 +299,19 @@ function ROBOT = kctdisprobot_V4(ROBOT)
     end
             drawnow
         
-        
+ %% poscondition
+ % zwrócenie pozycji koñócwki efektora.
         ROBOT.End.X=quivX;
         ROBOT.End.Y=quivY;
         ROBOT.End.Z=quivZ;
-        ROBOT.End.A1 = radtodeg(atan2(rMtxA(1,3),-rMtxA(2,3)));
-        ROBOT.End.B1 = radtodeg(atan2(rMtxB(3,1), rMtxB(3,2)));
+        %%%%%%%%%%
+        %tr2eul(rMtx)*180/pi, pause
+        ROBOT.End.R=rMtx;
+        ROBOT.End.A1 = angle_in_180_resolution(radtodeg(atan2(rMtxA(1,3),-rMtxA(2,3)))-90);
+        ROBOT.End.B1 = angle_in_180_resolution(radtodeg(atan2(rMtxB(3,1), rMtxB(3,2)))+90);
         B =atan2(rMtx(2,1),rMtx(1,1));
-        ROBOT.End.C1 = radtodeg(atan2(-rMtx(3,1),cos(B)*rMtx(1,1) + sin(B)*rMtx(2,1)));
+        ROBOT.End.C1 = angle_in_180_resolution(90+radtodeg(atan2(-rMtx(3,1),cos(B)*rMtx(1,1) + sin(B)*rMtx(2,1))));
+%         disp([ROBOT.End.A1,ROBOT.End.B1,ROBOT.End.C1])
 %         ROBOT = rotox_to_angles(rMtx, ROBOT); wersja do testow
         
         
@@ -345,27 +354,41 @@ alpha = alpha*pi/180;
                   0,           0,  1, 0;
                   0,           0,  0, 1];
 
-function yROBOT = rotox_to_angles(mRotox, xROBOT)
-% funkcja licz¹ca k¹ty orientacji w zale¿noœci od wartoœci w macierzy
-% rotacji funkcja zwraca strukture z ROBOT zaci¹gajac ta sam¹ strukture.
-% Zaciagane s¹ dwie wersje w zale¿noœci od potrzeby, k¹tów eulera i k¹tów
-% normalnych
-% http://en.wikibooks.org/wiki/Robotics_Kinematics_and_Dynamics/Description_of_Position_and_Orientation
-yROBOT = xROBOT;
-A = radtodeg(atan2(mRotox(3,2),mRotox(3,3)));
-B = radtodeg(atan2(mRotox(2,1),mRotox(1,1)));
-C = radtodeg(atan2(-mRotox(3,1),cos(B)*mRotox(1,1) + sin(B)*mRotox(2,1)));
-% yROBOT.End.A1 = A;
-% yROBOT.End.B1 = B;
-yROBOT.End.C1 = C;
-%% Euler Angles
-A = radtodeg(atan2(mRotox(1,3),-mRotox(2,3)));
-B = radtodeg(atan2(-mRotox(2,3) * cos(A) + mRotox(1,3) * sin(A),mRotox(3,3)));
-C = radtodeg(atan2(mRotox(3,1), mRotox(3,2)));   
-yROBOT.End.A2 = A;
-yROBOT.End.B2 = B;
-yROBOT.End.C2 = C;
+% function yROBOT = rotox_to_angles(mRotox, xROBOT)
+% % funkcja licz¹ca k¹ty orientacji w zale¿noœci od wartoœci w macierzy
+% % rotacji funkcja zwraca strukture z ROBOT zaci¹gajac ta sam¹ strukture.
+% % Zaciagane s¹ dwie wersje w zale¿noœci od potrzeby, k¹tów eulera i k¹tów
+% % normalnych
+% % http://en.wikibooks.org/wiki/Robotics_Kinematics_and_Dynamics/Description_of_Position_and_Orientation
+% yROBOT = xROBOT;
+% A = radtodeg(atan2(mRotox(3,2),mRotox(3,3)))-90;
+% B = radtodeg(atan2(mRotox(2,1),mRotox(1,1)))+90;
+% C = radtodeg(atan2(-mRotox(3,1),cos(B)*mRotox(1,1) + sin(B)*mRotox(2,1)));
+% % yROBOT.End.A1 = A;
+% % yROBOT.End.B1 = B;
+% yROBOT.End.C1 = C;
+% %% Euler Angles
+% A = radtodeg(atan2(mRotox(1,3),-mRotox(2,3)))-90;
+% B = radtodeg(atan2(-mRotox(2,3) * cos(A) + mRotox(1,3) * sin(A),mRotox(3,3)))+90;
+% C = radtodeg(atan2(mRotox(3,1), mRotox(3,2)))-270;   
+% yROBOT.End.A2 = A;
+% yROBOT.End.B2 = B;
+% yROBOT.End.C2 = C;
 
+function Y = angle_in_180_resolution(X)
+% funkcja która konwertuje k¹ty na zakres od -180 do 180. Dzia³a jedynie w
+% zakresie -360 do 360 stopni
+if X > 180              % case X = 181 270
+    Y = mod(X, 180);    % Y = 1 90
+    Y = -180 + Y;       % Y = -179 -90
+elseif X < -180         % case X = -181 -270
+    Y = mod(-X, 180);   % Y = 1 90
+    Y = 180 - Y;        % Y = 179 90
+else
+    Y = X;
+end
+
+        
                   
                   
                   

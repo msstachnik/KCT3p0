@@ -245,6 +245,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
             cc = ones(size(xc));
             sLink = [10, 0, 0; 0, 10, 0; 0, 0, 30];
             rMtx = kctrotoy(90)*kctrotox(-angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotoz(angleDH(4))*kctrotoy(-angleDH(5));
+            
             for k = 1:size(xc,1)
                     for l = 1:size(xc,2)
                         v =  rMtx([1:3],[1:3])*sLink * [xc(k,l); yc(k,l); zc(k,l)];
@@ -260,7 +261,11 @@ function ROBOT = kctdisprobot_V4(ROBOT)
             quivX = vLink2(1)+vLink3(1)+vLink4(1)+vLink5(1)+vLink6(1);
             quivY = vLink2(2)+vLink3(2)+vLink4(2)+vLink5(2)+vLink6(2);
             quivZ = kctrobotlinks(1)+vLink3(3)+vLink4(3)+vLink5(3)+vLink6(3);
+            rMtxA = kctrotoz(angleDH(1)+90)*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotox(angleDH(4))*kctrotoy(-angleDH(5))*kctrotox(angleDH(6)-90);
+            rMtxB = kctrotoz(angleDH(1)+90)*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotox(angleDH(4))*kctrotoy(-angleDH(5))*kctrotox(angleDH(6)+90);
+%             rMtx = -kctrotoz(angleDH(1))*kctrotoy((angleDH(3)+angleDH(2)))*kctrotox(angleDH(4))*kctrotoy(angleDH(5))*kctrotox(angleDH(6));
             rMtx = kctrotoz(angleDH(1))*kctrotoy((-angleDH(3)-angleDH(2)))*kctrotox(angleDH(4))*kctrotoy(-angleDH(5))*kctrotox(-90+angleDH(6));
+
     if display
             quiver3(quivX,quivY,quivZ,rMtx(1,1),rMtx(2,1),rMtx(3,1),150,'color','b');
             quiver3(quivX,quivY,quivZ,rMtx(1,2),rMtx(2,2),rMtx(3,2),150,'color','r');
@@ -294,7 +299,11 @@ function ROBOT = kctdisprobot_V4(ROBOT)
         ROBOT.End.X=quivX;
         ROBOT.End.Y=quivY;
         ROBOT.End.Z=quivZ;
-        ROBOT = rotox_to_angles(rMtx, ROBOT);
+        ROBOT.End.A1 = radtodeg(atan2(rMtxA(1,3),-rMtxA(2,3)));
+        ROBOT.End.B1 = radtodeg(atan2(rMtxB(3,1), rMtxB(3,2)));
+        B =atan2(rMtx(2,1),rMtx(1,1));
+        ROBOT.End.C1 = radtodeg(atan2(-rMtx(3,1),cos(B)*rMtx(1,1) + sin(B)*rMtx(2,1)));
+%         ROBOT = rotox_to_angles(rMtx, ROBOT); wersja do testow
         
         
 
@@ -346,8 +355,8 @@ yROBOT = xROBOT;
 A = radtodeg(atan2(mRotox(3,2),mRotox(3,3)));
 B = radtodeg(atan2(mRotox(2,1),mRotox(1,1)));
 C = radtodeg(atan2(-mRotox(3,1),cos(B)*mRotox(1,1) + sin(B)*mRotox(2,1)));
-yROBOT.End.A1 = A;
-yROBOT.End.B1 = B;
+% yROBOT.End.A1 = A;
+% yROBOT.End.B1 = B;
 yROBOT.End.C1 = C;
 %% Euler Angles
 A = radtodeg(atan2(mRotox(1,3),-mRotox(2,3)));

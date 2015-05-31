@@ -22,7 +22,7 @@ function varargout = KukaGui_V4(varargin)
 
 % Edit the above text to modify the response to help KukaGui_V4
 
-% Last Modified by GUIDE v2.5 30-May-2015 04:36:37
+% Last Modified by GUIDE v2.5 31-May-2015 02:15:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -59,6 +59,8 @@ handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 
 handles.mess.AXIS_ACT=[0;0;0;13;0;0;10;36;65;88;73;83;95;65;67;84];                 % wiadomoœc o rz¹danie pozycji przegóbów
+handles.mess.POS_ACT=[0;0;0;12;0;0;9;36;80;79;83;32;65;67;84];  
+
 set(handles.RobotDisplay,'Value',1);
 handles.CommunicationSts = 0; %no communication
 % Update handles structure
@@ -564,8 +566,10 @@ set(handles.T_Joint6, 'String', num2str(handles.KR6R900.Joint(6).Value, precisio
 
 if handles.CommunicationSts == 1 % jeœli jest komunikacja to jest mo¿liwosæ zadawania pozycji
     enable_sts = 'on';
+    visible_sts = 'on';
 else
     enable_sts = 'off';
+    visible_sts = 'off';
 end
 set(handles.S_X, 'enable', enable_sts);                    % zaktualizuj wartoœc slidera
 set(handles.X_value, 'enable', enable_sts);   
@@ -585,8 +589,6 @@ set(handles.B_value, 'enable', enable_sts);
 set(handles.S_C, 'enable', enable_sts);                    % zaktualizuj wartoœc slidera
 set(handles.C_value, 'enable', enable_sts);   
 
-
-
 set(handles.S_X, 'Value', handles.KR6R900.End.X);                     % zaktualizuj wartoœc slidera
 set(handles.X_value, 'String', num2str(handles.KR6R900.End.X, precision));        % zaktualizuj wartoœæ polu tekstowym
 
@@ -605,12 +607,26 @@ set(handles.B_value, 'String', num2str(handles.KR6R900.End.B1, precision));     
 set(handles.S_C, 'Value', handles.KR6R900.End.C1);                     % zaktualizuj wartoœc slidera
 set(handles.C_value, 'String', num2str(handles.KR6R900.End.C1, precision));        % zaktualizuj wartoœæ polu tekstowym
 
-% testowe pola
+% ukryj pola A B C jeœli jest ofline
+set(handles.S_A, 'Visible', visible_sts);
+set(handles.A_value, 'Visible', visible_sts);
+set(handles.A_text, 'Visible', visible_sts);
 
-set(handles.A2_Value, 'String', num2str(handles.KR6R900.End.A2,precision))                    
-set(handles.B2_Value, 'String', num2str(handles.KR6R900.End.B2,precision))
-set(handles.C2_Value, 'String', num2str(handles.KR6R900.End.C2,precision))
+set(handles.S_B, 'Visible', visible_sts);
+set(handles.B_value, 'Visible', visible_sts);
+set(handles.B_text, 'Visible', visible_sts);
 
+set(handles.S_C, 'Visible', visible_sts);
+set(handles.C_value, 'Visible', visible_sts);
+set(handles.C_text, 'Visible', visible_sts);
+
+% zakltualizuj communication panel
+if handles.CommunicationSts == 1 % jeœli jest komunikacja to jest mo¿liwosæ zadawania pozycji
+    set(handles.Communications_Status, 'String', 'on');
+else
+    set(handles.Communications_Status, 'String', 'off');
+
+end
 
 
 
@@ -624,9 +640,7 @@ set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z,precision))
 set(handles.A_value, 'String', num2str(handles.KR6R900.End.A1,precision))                    
 set(handles.B_value, 'String', num2str(handles.KR6R900.End.B1,precision))
 set(handles.C_value, 'String', num2str(handles.KR6R900.End.C1,precision))
-set(handles.A2_Value, 'String', num2str(handles.KR6R900.End.A2,precision))                    
-set(handles.B2_Value, 'String', num2str(handles.KR6R900.End.B2,precision))
-set(handles.C2_Value, 'String', num2str(handles.KR6R900.End.C2,precision))
+
 
 % --- Executes on button press in Init_Communication.
 function Init_Communication_Callback(hObject, eventdata, handles)
@@ -776,6 +790,8 @@ function Monitor_Callback(hObject, eventdata, handles)
 global RobotData;
 global StopCommand;
 RobotData = []; % wyczysæ zawartosæ RobotData
+set(handles.Number_of_Data, 'String',0); % zaktualizuj wartosæ Numbre of data na panelu - reset danych
+set(handles.Actual_time, 'String',0); % zaktualizuj wartosæ czasu na panelu
 StopCommand = 0; % reset stop command - flaga zatrzymujaca pomiary
 if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
     Robot = handles.Robot;
@@ -810,6 +826,7 @@ while time < timeout
             RobotData(i).Joints = Joints;
             handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
             RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z handles.KR6R900.End.A1 handles.KR6R900.End.B1 handles.KR6R900.End.C1];
+            set(handles.Number_of_Data, 'String',i); % zaktualizuj wartosæ Numbre of data na panelu
             i = i+1;
             handles.Robot = Robot;
 
@@ -825,6 +842,8 @@ while time < timeout
     end
     
     time = toc; %weŸ aktualna wartosæ czasu
+    set(handles.Actual_time, 'String',time); % zaktualizuj wartosæ czasu na panelu
+    
 end
 handles.CommunicationSts = 1;
 update_panels(handles) 
@@ -922,12 +941,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     xlabel('time [s]')
     ylabel('position [deg]')
     
-    figure(2); %position of end of efector
-    plot3(X,Y,Z)
-    title('position of end of efector')
-    xlabel('x [mm]')
-    ylabel('y [mm]')
-    zlabel('z [mm]')
+
     
     
 else
@@ -944,6 +958,10 @@ function RobotDisplay_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of RobotDisplay
 handles.KR6R900.display = get(hObject,'Value');
+handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);   
+%zaktualizuj po³o¿enie robota
+update_panels(handles)                                                     %zaktualizuj wartosci Position end of effector
+% Update handles structure
 guidata(hObject, handles);
 
 
@@ -1462,12 +1480,16 @@ for i = 1 : length(RobotData)
     B(i) = RobotData(i).End(5);
     C(i) = RobotData(i).End(6);
 end
-header = 'time Joint1 Joint2 Joint3 Joint4 Joint5 Joint6 X Y Z A B C';
-Data = [time' Joint1' Joint2' Joint3' Joint4' Joint5' Joint6' X' Y' Z' A' B' C'];
+header = 'time	Joint1	Joint2	Joint3	Joint4	Joint5	Joint6	X	Y	Z	A	B	C';
+% Data = [time' Joint1' Joint2' Joint3' Joint4' Joint5' Joint6' X' Y' Z' A' B' C'];
+% Data = [time Joint1 Joint2 Joint3 Joint4 Joint5 Joint6 X Y Z A B C];
 Data_format = '%12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f \n';
 file = fopen(File_name,'wt');
 fprintf(file, '%50s\n', header);
-fprintf(file, Data_format, Data);
+for i=1:length(time)
+    Data = [time(i) Joint1(i) Joint2(i) Joint3(i) Joint4(i) Joint5(i) Joint6(i) X(i) Y(i) Z(i) A(i) B(i) C(i)];
+    fprintf(file, Data_format, Data);
+end
 fclose(file);
 
 
@@ -1475,3 +1497,209 @@ fclose(file);
 
     
     
+
+
+% --- Executes when user attempts to close figure1.
+function figure1_CloseRequestFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: delete(hObject) closes the figure
+delete(hObject);
+
+
+% --- Executes on button press in Write_Actual_Position.
+function Write_Actual_Position_Callback(hObject, eventdata, handles)
+% hObject    handle to Write_Actual_Position (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+X_pos = get(handles.S_X,'Value');
+send_request(handles, 'XP1.X', X_pos);
+
+Y_pos = get(handles.S_Y,'Value');
+send_request(handles, 'XP1.Y', Y_pos);
+
+Z_pos = get(handles.S_Z,'Value');
+send_request(handles, 'XP1.Z', Z_pos);
+
+
+% --- Executes on button press in VIS_end_of_efector.
+function VIS_end_of_efector_Callback(hObject, eventdata, handles)
+% hObject    handle to VIS_end_of_efector (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global RobotData;
+if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
+    time = [RobotData.time];
+    for i = 1 : length(RobotData)
+        Joint1(i) = RobotData(i).Joints(1);
+        Joint2(i) = RobotData(i).Joints(2);
+        Joint3(i) = RobotData(i).Joints(3);
+        Joint4(i) = RobotData(i).Joints(4);
+        Joint5(i) = RobotData(i).Joints(5);
+        Joint6(i) = RobotData(i).Joints(6);
+        X(i) = RobotData(i).End(1);
+        Y(i) = RobotData(i).End(2);
+        Z(i) = RobotData(i).End(3);
+        A(i) = RobotData(i).End(4);
+        B(i) = RobotData(i).End(5);
+        C(i) = RobotData(i).End(6);
+    end
+
+    figure(2); %position of end of efector
+    plot3(X,Y,Z)
+    title('position of end of efector')
+    xlabel('x [mm]')
+    ylabel('y [mm]')
+    zlabel('z [mm]')
+    
+    
+else
+    h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
+    waitfor(h) 
+end
+
+
+% --- Executes on button press in VIS_velocity.
+function VIS_velocity_Callback(hObject, eventdata, handles)
+% hObject    handle to VIS_velocity (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global RobotData;
+if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
+    time = [RobotData.time];
+    for i = 1 : length(RobotData)
+        Joint1(i) = RobotData(i).Joints(1);
+        Joint2(i) = RobotData(i).Joints(2);
+        Joint3(i) = RobotData(i).Joints(3);
+        Joint4(i) = RobotData(i).Joints(4);
+        Joint5(i) = RobotData(i).Joints(5);
+        Joint6(i) = RobotData(i).Joints(6);
+        X(i) = RobotData(i).End(1);
+        Y(i) = RobotData(i).End(2);
+        Z(i) = RobotData(i).End(3);
+        A(i) = RobotData(i).End(4);
+        B(i) = RobotData(i).End(5);
+        C(i) = RobotData(i).End(6);
+    end
+
+
+    
+    vJoint1 = differenction(Joint1, time);
+    vJoint2 = differenction(Joint2, time);
+    vJoint3 = differenction(Joint3, time);
+    vJoint4 = differenction(Joint4, time);
+    vJoint5 = differenction(Joint5, time);
+    vJoint6 = differenction(Joint6, time);
+    
+    VJoints= [vJoint1; vJoint2; vJoint3; vJoint4; vJoint5; vJoint6];
+    
+    vX = differenction(X, time);
+    vY = differenction(Y, time);
+    vZ = differenction(Z, time);
+    
+    VXYZ = [vX; vY; vZ];
+    
+    V = sqrt(vX.^2 + vY.^2 + vZ.^2);
+    figure(3); %position of end of efector
+    
+    subplot(3,1,1)
+    title('Joint Velocity')
+    xlabel('time [s]')
+    ylabel('Joint speed [deg /s]')
+    plot(time, VJoints);
+    legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
+
+    subplot(3,1,2)
+    title('End of Effector Velocity')
+    xlabel('time [s]')
+    ylabel(' speed [mm /s]')
+    plot(time, VXYZ);
+    legend('v_X', 'v_Y', 'v_Z');
+    
+    subplot(3,1,3)
+    title('Absolute End of Effector Velocity')
+    xlabel('time [s]')
+    ylabel('speed [mm /s]')
+    plot(time, V);
+    
+    
+else
+    h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
+    waitfor(h) 
+end
+
+
+% --- Executes on button press in VIS_acceleration.
+function VIS_acceleration_Callback(hObject, eventdata, handles)
+% hObject    handle to VIS_acceleration (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+global RobotData;
+if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
+    time = [RobotData.time];
+    for i = 1 : length(RobotData)
+        Joint1(i) = RobotData(i).Joints(1);
+        Joint2(i) = RobotData(i).Joints(2);
+        Joint3(i) = RobotData(i).Joints(3);
+        Joint4(i) = RobotData(i).Joints(4);
+        Joint5(i) = RobotData(i).Joints(5);
+        Joint6(i) = RobotData(i).Joints(6);
+        X(i) = RobotData(i).End(1);
+        Y(i) = RobotData(i).End(2);
+        Z(i) = RobotData(i).End(3);
+        A(i) = RobotData(i).End(4);
+        B(i) = RobotData(i).End(5);
+        C(i) = RobotData(i).End(6);
+    end
+    
+    
+    
+    aJoint1 = differenction(differenction(Joint1, time),time);
+    aJoint2 = differenction(differenction(Joint2, time),time);
+    aJoint3 = differenction(differenction(Joint3, time),time);
+    aJoint4 = differenction(differenction(Joint4, time),time);
+    aJoint5 = differenction(differenction(Joint5, time),time);
+    aJoint6 = differenction(differenction(Joint6, time),time);
+    
+    aJoints= [aJoint1; aJoint2; aJoint3; aJoint4; aJoint5; aJoint6];
+    
+    aX = differenction(differenction(X, time),time);
+    aY = differenction(differenction(Y, time),time);
+    aZ = differenction(differenction(Z, time),time);
+    
+    AXYZ = [aX; aY; aZ];
+    
+    A = sqrt(aX.^2 + aY.^2 + aZ.^2);
+    figure(3); %position of end of efector
+    
+    subplot(3,1,1)
+    title('Joint Acceleration')
+    xlabel('time [s]')
+    ylabel('Joint speed [deg /s]')
+    plot(time, aJoints);
+    legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
+
+    subplot(3,1,2)
+    title('End of Effector Acceleration')
+    xlabel('time [s]')
+    ylabel(' speed [mm /s]')
+    plot(time, AXYZ);
+    legend('v_X', 'v_Y', 'v_Z');
+    
+    subplot(3,1,3)
+    title('Absolute End of Effector Acceleration')
+    xlabel('time [s]')
+    ylabel('speed [mm /s]')
+    plot(time, A);
+    
+    
+else
+    h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
+    waitfor(h) 
+end

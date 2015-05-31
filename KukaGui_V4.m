@@ -22,7 +22,7 @@ function varargout = KukaGui_V4(varargin)
 
 % Edit the above text to modify the response to help KukaGui_V4
 
-% Last Modified by GUIDE v2.5 31-May-2015 02:15:30
+% Last Modified by GUIDE v2.5 31-May-2015 22:49:11
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -54,7 +54,7 @@ function KukaGui_V4_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for KukaGui_V4
 handles.output = hObject;
-load KR6R900_V3
+load KR6R900_V4
 handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 
@@ -136,7 +136,7 @@ function S_Joint1_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(1).Min);
 set(hObject, 'Max', KR6R900.Joint(1).Max);
 set(hObject, 'Value', KR6R900.Joint(1).Value);
@@ -172,7 +172,7 @@ function T_Joint1_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(1).Value));
 guidata(hObject, handles);
 
@@ -202,7 +202,7 @@ function S_Joint2_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(2).Min);
 set(hObject, 'Max', KR6R900.Joint(2).Max);
 set(hObject, 'Value', KR6R900.Joint(2).Value);
@@ -246,7 +246,7 @@ function T_Joint2_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(2).Value));
 guidata(hObject, handles);
 
@@ -278,7 +278,7 @@ function S_Joint3_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(3).Min);
 set(hObject, 'Max', KR6R900.Joint(3).Max);
 set(hObject, 'Value', KR6R900.Joint(3).Value);
@@ -314,7 +314,7 @@ function T_Joint3_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(3).Value));
 guidata(hObject, handles);
 
@@ -346,7 +346,7 @@ function S_Joint4_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(4).Min);
 set(hObject, 'Max', KR6R900.Joint(4).Max);
 set(hObject, 'Value', KR6R900.Joint(4).Value);
@@ -382,7 +382,7 @@ function T_Joint4_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(4).Value));
 guidata(hObject, handles);
 
@@ -414,7 +414,7 @@ function S_Joint5_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(5).Min);
 set(hObject, 'Max', KR6R900.Joint(5).Max);
 set(hObject, 'Value', KR6R900.Joint(5).Value);
@@ -450,7 +450,7 @@ function T_Joint5_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(5).Value));
 guidata(hObject, handles);
 
@@ -482,7 +482,7 @@ function S_Joint6_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Joint(6).Min);
 set(hObject, 'Max', KR6R900.Joint(6).Max);
 set(hObject, 'Value', KR6R900.Joint(6).Value);
@@ -519,7 +519,7 @@ function T_Joint6_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to T_Joint6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'String', num2str(KR6R900.Joint(6).Value));
 guidata(hObject, handles);
 
@@ -529,7 +529,7 @@ function Home_Callback(hObject, eventdata, handles)
 % hObject    handle to Home (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-load KR6R900_V3
+load KR6R900_V4
 handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 guidata(hObject, handles);
@@ -538,7 +538,7 @@ update_panels(handles)                                                     %zakt
 
 function update_panels(handles)
 
-precision = 3;
+precision = 5;
 set(handles.S_Joint1, 'String', handles.KR6R900.Joint(1).Value);                    % zaktualizuj wartoœc slidera
 set(handles.S_Joint1, 'Value', handles.KR6R900.Joint(1).Value);                     % zaktualizuj wartoœc slidera
 set(handles.T_Joint1, 'String', num2str(handles.KR6R900.Joint(1).Value, precision));        % zaktualizuj wartoœæ polu tekstowym
@@ -590,13 +590,13 @@ set(handles.S_C, 'enable', enable_sts);                    % zaktualizuj wartoœc
 set(handles.C_value, 'enable', enable_sts);   
 
 set(handles.S_X, 'Value', handles.KR6R900.End.X);                     % zaktualizuj wartoœc slidera
-set(handles.X_value, 'String', num2str(handles.KR6R900.End.X, precision));        % zaktualizuj wartoœæ polu tekstowym
+set(handles.X_value, 'String', num2str(handles.KR6R900.End.X, precision +1));        % zaktualizuj wartoœæ polu tekstowym
 
 set(handles.S_Y, 'Value', handles.KR6R900.End.Y);                     % zaktualizuj wartoœc slidera
-set(handles.Y_value, 'String', num2str(handles.KR6R900.End.Y, precision));        % zaktualizuj wartoœæ polu tekstowym
+set(handles.Y_value, 'String', num2str(handles.KR6R900.End.Y, precision +1));        % zaktualizuj wartoœæ polu tekstowym
 
 set(handles.S_Z, 'Value', handles.KR6R900.End.Z);                     % zaktualizuj wartoœc slidera
-set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z, precision));        % zaktualizuj wartoœæ polu tekstowym
+set(handles.Z_value, 'String', num2str(handles.KR6R900.End.Z, precision +1));        % zaktualizuj wartoœæ polu tekstowym
 
 set(handles.S_A, 'Value', handles.KR6R900.End.A1);                     % zaktualizuj wartoœc slidera
 set(handles.A_value, 'String', num2str(handles.KR6R900.End.A1, precision));        % zaktualizuj wartoœæ polu tekstowym
@@ -607,18 +607,18 @@ set(handles.B_value, 'String', num2str(handles.KR6R900.End.B1, precision));     
 set(handles.S_C, 'Value', handles.KR6R900.End.C1);                     % zaktualizuj wartoœc slidera
 set(handles.C_value, 'String', num2str(handles.KR6R900.End.C1, precision));        % zaktualizuj wartoœæ polu tekstowym
 
-% ukryj pola A B C jeœli jest ofline
-set(handles.S_A, 'Visible', visible_sts);
-set(handles.A_value, 'Visible', visible_sts);
-set(handles.A_text, 'Visible', visible_sts);
-
-set(handles.S_B, 'Visible', visible_sts);
-set(handles.B_value, 'Visible', visible_sts);
-set(handles.B_text, 'Visible', visible_sts);
-
-set(handles.S_C, 'Visible', visible_sts);
-set(handles.C_value, 'Visible', visible_sts);
-set(handles.C_text, 'Visible', visible_sts);
+% % ukryj pola A B C jeœli jest ofline - nieaktualne
+% set(handles.S_A, 'Visible', visible_sts);
+% set(handles.A_value, 'Visible', visible_sts);
+% set(handles.A_text, 'Visible', visible_sts);
+% 
+% set(handles.S_B, 'Visible', visible_sts);
+% set(handles.B_value, 'Visible', visible_sts);
+% set(handles.B_text, 'Visible', visible_sts);
+% 
+% set(handles.S_C, 'Visible', visible_sts);
+% set(handles.C_value, 'Visible', visible_sts);
+% set(handles.C_text, 'Visible', visible_sts);
 
 % zakltualizuj communication panel
 if handles.CommunicationSts == 1 % jeœli jest komunikacja to jest mo¿liwosæ zadawania pozycji
@@ -988,7 +988,7 @@ function S_X_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Workspace(1,1));
 set(hObject, 'Max', KR6R900.Workspace(1,2));
 
@@ -1004,10 +1004,26 @@ function X_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of X_value as text
 %        str2double(get(hObject,'String')) returns contents of X_value as a double
-X_pos = get(hObject,'Value');
-set(handles.S_X, 'Value', num2str(X_pos, 3)); 
-send_request(handles, 'XP1.X', X_pos)
+X_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_X, 'Min');
+Max = get(handles.S_X, 'Max');
+
+if isnumeric(Value) && X_pos >= Min && X_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_X, 'String', X_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_X, 'Value', X_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP1.X', X_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_X, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
+
+
+
+
+
 
 % --- Executes during object creation, after setting all properties.
 function X_value_CreateFcn(hObject, eventdata, handles)
@@ -1046,7 +1062,7 @@ function S_Y_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Workspace(1,3));
 set(hObject, 'Max', KR6R900.Workspace(1,4));
 
@@ -1062,9 +1078,20 @@ function Y_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of X_value as text
 %        str2double(get(hObject,'String')) returns contents of X_value as a double
-Y_pos = get(hObject,'Value');
-set(handles.S_Y, 'Value', num2str(Y_pos, 3)); 
-send_request(handles, 'XP1.Y', Y_pos)
+Y_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_Y, 'Min');
+Max = get(handles.S_Y, 'Max');
+
+if isnumeric(Value) && Y_pos >= Min && Y_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_Y, 'String', Y_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_Y, 'Value', Y_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP1.Y', Y_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_Y, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1103,7 +1130,7 @@ function S_Z_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
-load KR6R900_V3                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
 set(hObject, 'Min', KR6R900.Workspace(1,5));
 set(hObject, 'Max', KR6R900.Workspace(1,6));
 
@@ -1118,9 +1145,20 @@ function Z_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of Z_value as text
 %        str2double(get(hObject,'String')) returns contents of Z_value as a double
-Z_pos = get(hObject,'Value');
-set(handles.S_Z, 'Value', num2str(Z_pos, 3)); 
-send_request(handles, 'XP1.Z', Z_pos)
+Z_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_Z, 'Min');
+Max = get(handles.S_Z, 'Max');
+
+if isnumeric(Value) && Z_pos >= Min && Z_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_Z, 'String', Z_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_Z, 'Value', Z_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP1.Z', Z_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_Z, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1145,7 +1183,7 @@ function S_A_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 A_pos = get(hObject,'Value');
 set(handles.A_value, 'String', num2str(A_pos, 3)); 
-send_request(handles, 'XP1.A', A_pos)
+send_request(handles, 'XP5.A', A_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1159,8 +1197,9 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
                                                                       % wczytaj parametry robota i przypisz wartoœci domyœlne
-set(hObject, 'Min', -180);
-set(hObject, 'Max', 180);
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+set(hObject, 'Min', KR6R900.A.min);
+set(hObject, 'Max', KR6R900.A.max);
 
 guidata(hObject, handles);
 
@@ -1173,9 +1212,20 @@ function A_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of A_value as text
 %        str2double(get(hObject,'String')) returns contents of A_value as a double
-A_pos = get(hObject,'Value');
-set(handles.S_A, 'Value', num2str(A_pos, 3)); 
-send_request(handles, 'XP1.A', A_pos)
+A_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_A, 'Min');
+Max = get(handles.S_A, 'Max');
+
+if isnumeric(Value) && A_pos >= Min && A_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_A, 'String', A_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_A, 'Value', A_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP5.A', A_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_A, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1215,8 +1265,9 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
                                                                       % wczytaj parametry robota i przypisz wartoœci domyœlne
-set(hObject, 'Min', -180);
-set(hObject, 'Max', 180);
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+set(hObject, 'Min', KR6R900.B.min);
+set(hObject, 'Max', KR6R900.B.max);
 
 guidata(hObject, handles);
 
@@ -1229,10 +1280,22 @@ function B_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of B_value as text
 %        str2double(get(hObject,'String')) returns contents of B_value as a double
-B_pos = get(hObject,'Value');
-set(handles.S_B, 'Value', num2str(B_pos, 3)); 
-send_request(handles, 'XP1.B', B_pos)
+B_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_B, 'Min');
+Max = get(handles.S_B, 'Max');
+
+if isnumeric(Value) && B_pos >= Min && B_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_B, 'String', B_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_B, 'Value', B_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP5.B', B_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_B, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
+
 
 % --- Executes during object creation, after setting all properties.
 function B_value_CreateFcn(hObject, eventdata, handles)
@@ -1257,7 +1320,7 @@ function S_C_Callback(hObject, eventdata, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 C_pos = get(hObject,'Value');
 set(handles.C_value, 'String', num2str(C_pos, 3)); 
-send_request(handles, 'XP1.C', C_pos)
+send_request(handles, 'XP5.C', C_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1271,8 +1334,9 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
                                                                     % wczytaj parametry robota i przypisz wartoœci domyœlne
-set(hObject, 'Min', -180);
-set(hObject, 'Max', 180);
+load KR6R900_V4                                                                        % wczytaj parametry robota i przypisz wartoœci domyœlne
+set(hObject, 'Min', KR6R900.C.min);
+set(hObject, 'Max', KR6R900.C.max);
 
 guidata(hObject, handles);
 
@@ -1285,10 +1349,22 @@ function C_value_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of C_value as text
 %        str2double(get(hObject,'String')) returns contents of C_value as a double
-C_pos = get(hObject,'Value');
-set(handles.S_C, 'Value', num2str(C_pos, 3)); 
-send_request(handles, 'XP1.C', C_pos)
+C_pos = str2double(get(hObject,'String'));
+Min = get(handles.S_C, 'Min');
+Max = get(handles.S_C, 'Max');
+
+if isnumeric(Value) && C_pos >= Min && C_pos <= Max
+    % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
+    set(handles.S_C, 'String', C_pos);                % zaktualizuj wartoœc slidera
+    set(handles.S_C, 'Value', C_pos);                 % zaktualizuj wartoœc slidera
+    send_request(handles, 'XP5.C', C_pos)
+else
+    %jeœli nie jest ok zachowaj poprzednia wartosæ
+    set(hObject, 'String', get(handles.S_C, 'Value'));                         % obs³uga b³êdnej wartoœci
+    
+end
 guidata(hObject, handles);
+
 
 % --- Executes during object creation, after setting all properties.
 function C_value_CreateFcn(hObject, eventdata, handles)
@@ -1462,36 +1538,40 @@ function Save_As_txt_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 global RobotData
-File_name = get(handles.Logs_Name,'String');
-File_name = strcat(File_name,'.txt');
+if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
+    File_name = get(handles.Logs_Name,'String');
+    File_name = strcat(File_name,'.txt');
 
-time = [RobotData.time];
-for i = 1 : length(RobotData)
-    Joint1(i) = RobotData(i).Joints(1);
-    Joint2(i) = RobotData(i).Joints(2);
-    Joint3(i) = RobotData(i).Joints(3);
-    Joint4(i) = RobotData(i).Joints(4);
-    Joint5(i) = RobotData(i).Joints(5);
-    Joint6(i) = RobotData(i).Joints(6);
-    X(i) = RobotData(i).End(1);
-    Y(i) = RobotData(i).End(2);
-    Z(i) = RobotData(i).End(3);
-    A(i) = RobotData(i).End(4);
-    B(i) = RobotData(i).End(5);
-    C(i) = RobotData(i).End(6);
+    time = [RobotData.time];
+    for i = 1 : length(RobotData)
+        Joint1(i) = RobotData(i).Joints(1);
+        Joint2(i) = RobotData(i).Joints(2);
+        Joint3(i) = RobotData(i).Joints(3);
+        Joint4(i) = RobotData(i).Joints(4);
+        Joint5(i) = RobotData(i).Joints(5);
+        Joint6(i) = RobotData(i).Joints(6);
+        X(i) = RobotData(i).End(1);
+        Y(i) = RobotData(i).End(2);
+        Z(i) = RobotData(i).End(3);
+        A(i) = RobotData(i).End(4);
+        B(i) = RobotData(i).End(5);
+        C(i) = RobotData(i).End(6);
+    end
+    header = 'time	Joint1	Joint2	Joint3	Joint4	Joint5	Joint6	X	Y	Z	A	B	C';
+    % Data = [time' Joint1' Joint2' Joint3' Joint4' Joint5' Joint6' X' Y' Z' A' B' C'];
+    % Data = [time Joint1 Joint2 Joint3 Joint4 Joint5 Joint6 X Y Z A B C];
+    Data_format = '%12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f \n';
+    file = fopen(File_name,'wt');
+    fprintf(file, '%50s\n', header);
+    for i=1:length(time)
+        Data = [time(i) Joint1(i) Joint2(i) Joint3(i) Joint4(i) Joint5(i) Joint6(i) X(i) Y(i) Z(i) A(i) B(i) C(i)];
+        fprintf(file, Data_format, Data);
+    end
+    fclose(file);
+else
+    h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
+    waitfor(h) 
 end
-header = 'time	Joint1	Joint2	Joint3	Joint4	Joint5	Joint6	X	Y	Z	A	B	C';
-% Data = [time' Joint1' Joint2' Joint3' Joint4' Joint5' Joint6' X' Y' Z' A' B' C'];
-% Data = [time Joint1 Joint2 Joint3 Joint4 Joint5 Joint6 X Y Z A B C];
-Data_format = '%12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f \n';
-file = fopen(File_name,'wt');
-fprintf(file, '%50s\n', header);
-for i=1:length(time)
-    Data = [time(i) Joint1(i) Joint2(i) Joint3(i) Joint4(i) Joint5(i) Joint6(i) X(i) Y(i) Z(i) A(i) B(i) C(i)];
-    fprintf(file, Data_format, Data);
-end
-fclose(file);
-
 
 
 
@@ -1509,9 +1589,9 @@ function figure1_CloseRequestFcn(hObject, eventdata, handles)
 delete(hObject);
 
 
-% --- Executes on button press in Write_Actual_Position.
-function Write_Actual_Position_Callback(hObject, eventdata, handles)
-% hObject    handle to Write_Actual_Position (see GCBO)
+% --- Executes on button press in Set_Actual_Position.
+function Set_Actual_Position_Callback(hObject, eventdata, handles)
+% hObject    handle to Set_Actual_Position (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
@@ -1676,7 +1756,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     AXYZ = [aX; aY; aZ];
     
     A = sqrt(aX.^2 + aY.^2 + aZ.^2);
-    figure(3); %position of end of efector
+    figure(4); 
     
     subplot(3,1,1)
     title('Joint Acceleration')

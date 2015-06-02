@@ -22,7 +22,7 @@ function varargout = KukaGui_V4(varargin)
 
 % Edit the above text to modify the response to help KukaGui_V4
 
-% Last Modified by GUIDE v2.5 31-May-2015 22:49:11
+% Last Modified by GUIDE v2.5 03-Jun-2015 01:08:49
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -63,7 +63,7 @@ handles.KR6R900 = KR6R900;
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 
 handles.mess.AXIS_ACT=[0;0;0;13;0;0;10;36;65;88;73;83;95;65;67;84];                 % wiadomoœc o rz¹danie pozycji przegóbów
-handles.mess.POS_ACT=[0;0;0;12;0;0;9;36;80;79;83;32;65;67;84];  
+handles.mess.POS_ACT=[0;0;0;13;0;0;10;36;80;79;83;95;65;67;84];  
 
 set(handles.RobotDisplay,'Value',1);
 handles.CommunicationSts = 0; %no communication
@@ -714,7 +714,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
     else % jeœli wszystko ok
         h = msgbox('Communication OK, position of robot will be updated','Information');
         waitfor(h)                                          % poczekaj na zamkniêcie okna
-        handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
+        handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca strukturê robora KR6R900
         handles.Robot = Robot;
     end
     
@@ -734,7 +734,7 @@ for i=1:length(Joints)
     handles.KR6R900.Joint(i).Value = Joints(i);
 end
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
-update_panels(handles)                                                              %zaktualizuj wartosci sliders panel
+                                                            %zaktualizuj wartosci sliders panel
 
 
 
@@ -796,13 +796,13 @@ else
     fopen(Robot);
 end
 
-fwrite(Robot,handles.mess.AXIS_ACT);   
+fwrite(Robot,handles.mess.AXIS_ACT);   % wys³anie zapytania o ramke z aktualn¹ pozycj¹ Jointów
 wait_for_BytesAvailable(Robot, 2) % max timeout
 if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
 
-    joint_message = fread(Robot,Robot.BytesAvailable);
+    joint_message = fread(Robot,Robot.BytesAvailable); % pobranie ramki do zmiennej
 
-    Joints = KukaData2Joint(joint_message);
+    Joints = KukaData2Joint(joint_message); % wyciagniêcie z ramki 6 pozcyji
     
     if sum(isnan(Joints)) > 0 % obs³uga b³êdu
         h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Joints read:', num2str(Joints)},'Fail');
@@ -814,12 +814,75 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
     end
     
 else %w przeciwnym wypadku fail
-    h = msgbox('Communication Failed', 'Fail');
+    h = msgbox('Communication AXIS_ACT Failed', 'Fail');
     waitfor(h)  
 end
 handles.CommunicationSts = 1;
 update_panels(handles) 
 guidata(hObject, handles);
+
+function Get_Position_XYZ_ABC(handles)
+% hObject    handle to Get_Position (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+%funkcja wywo³ywana w update_panels s³u¿y do pobrania rzeczywistych pozycji
+%robota X Y Z A C B i zaktualizowana struktury robota, struktura ta mo¿e
+%byæ wtedy u¿yta w ka¿dym dowolnym miejsu w Gui a jest obecnie u¿ywana w
+%funkcji Get_Real_Values_Callback, ale równie dobrze moze byæ u¿yta w
+%funkcji Get_Position_Callback albo Monitor_Callback
+
+if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
+    Robot = handles.Robot;
+else
+    Robot=tcpip('192.168.1.100',7000); % init comunication
+end
+
+if strcmp(Robot.Status,'open') %sprawdzenie czy Robot jest ju¿ w stanie open
+    
+else
+    fopen(Robot);
+end
+
+fwrite(Robot,handles.mess.POS_ACT); % wys³anie zapytania o ramke z aktualn¹ pozycj¹
+wait_for_BytesAvailable(Robot, 2) % max timeout
+if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
+
+    joint_message = fread(Robot,Robot.BytesAvailable); % pobranie ramki do zmiennej
+
+    XYZ_ABC = KukaData2XYZABC(joint_message); % wyciagniêcie z ramki 6 pozcyji
+    
+    if sum(isnan(XYZ_ABC)) > 0 % obs³uga b³êdu
+        h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Position read:', num2str(Joints)},'Fail');
+        waitfor(h)                                          % poczekaj na zamkniêcie okna
+    else % jeœli wszystko ok
+
+        handles.KR6R900.Real.X = XYZ_ABC(1); % pobranie informacji do struktury handles
+        handles.KR6R900.Real.Y = XYZ_ABC(2);
+        handles.KR6R900.Real.Z = XYZ_ABC(3);
+        handles.KR6R900.Real.A = XYZ_ABC(4);
+        handles.KR6R900.Real.B = XYZ_ABC(5);
+        handles.KR6R900.Real.C = XYZ_ABC(6);
+        handles.Robot = Robot;
+        
+        % zaktualizowanie pól tekstowych
+        precision = 5;
+        set(handles.X_Value_Robot, 'String', num2str(XYZ_ABC(1), precision));  
+        set(handles.Y_Value_Robot, 'String', num2str(XYZ_ABC(2), precision));  
+        set(handles.Z_Value_Robot, 'String', num2str(XYZ_ABC(3), precision));  
+        set(handles.A_Value_Robot, 'String', num2str(XYZ_ABC(4), precision));  
+        set(handles.B_Value_Robot, 'String', num2str(XYZ_ABC(5), precision));  
+        set(handles.C_Value_Robot, 'String', num2str(XYZ_ABC(6), precision));  
+        
+    end
+    
+else %w przeciwnym wypadku fail
+    h = msgbox('Communication of POS_ACT Failed', 'Fail');
+    waitfor(h)  
+
+end
+handles.CommunicationSts = 1;
+
 
 
 % --- Executes on button press in Monitor.
@@ -881,7 +944,7 @@ while time < timeout
         end
 
     else %w przeciwnym wypadku fail
-        h = msgbox('Communication Failed', 'Fail');
+        h = msgbox('Communication AXIS_ACT Failed', 'Fail');
         waitfor(h)
         break;
     end
@@ -906,6 +969,9 @@ function Monitor_Value_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of Monitor_Value as text
 %        str2double(get(hObject,'String')) returns contents of Monitor_Value as a double
 
+% ten przycisk nie ma ¿adnej obs³ugi wartoœc tego przycisku jest pobierana
+% w funckji Monitor_Callback
+
 
 % --- Executes during object creation, after setting all properties.
 function Monitor_Value_CreateFcn(hObject, ~, handles)
@@ -925,6 +991,8 @@ function Stop_Callback(hObject, ~, handles)
 % hObject    handle to Stop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% funcka s³u¿y do zatrzymanania funkcji Monitor_Callback
 global StopCommand;
 StopCommand = 1; % u¿ywane w Monitor_Callback
 
@@ -934,8 +1002,11 @@ function VIS_Joint_Callback(hObject, ~, handles)
 % hObject    handle to VIS_Joint (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+% funkcja wizualizujaca przemieszenie Jointów
+
 global RobotData;
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
+    % sprawdzenie czy dane s¹ prawid³owe
     time = [RobotData.time];
     for i = 1 : length(RobotData)
         Joint1(i) = RobotData(i).Joints(1);
@@ -951,6 +1022,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
         B(i) = RobotData(i).End(5);
         C(i) = RobotData(i).End(6);
     end
+    % konwersja z tablicy struktur na poszczególne zmienne
     figure(1); %position of joints
     
     subplot(3,2,1) %joint 1
@@ -1005,6 +1077,8 @@ function RobotDisplay_Callback(hObject, ~, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of RobotDisplay
+% funkcja do zatrzymania lub wznowienia odœwie¿ania wizualizacji robota.
+% KR6R900.display jest u¿ywane zarówno w funkcji kctdisprobot_V4 jak i update_panels
 handles.KR6R900.display = get(hObject,'Value');
 handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);   
 %zaktualizuj po³o¿enie robota
@@ -1021,6 +1095,9 @@ function S_X_Callback(hObject, ~, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+% funkcja wykonuje procedure wys³ania ramki do robota z aktualn¹ nastaw¹
+% parametru 
 X_pos = get(hObject,'Value');
 set(handles.X_value, 'String', num2str(X_pos, 3)); 
 send_request(handles, 'XP1.X', X_pos)
@@ -1033,6 +1110,8 @@ function S_X_CreateFcn(hObject, ~, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: slider controls usually have a light gray background.
+
+%inicjalizacja suwaka
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -1427,90 +1506,9 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton13.
-function pushbutton13_Callback(hObject, ~, handles)
-% hObject    handle to pushbutton13 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in pushbutton14.
-function pushbutton14_Callback(hObject, ~, handles)
-% hObject    handle to pushbutton14 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-
-function A2_Value_Callback(hObject, ~, handles)
-% hObject    handle to A2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of A2_Value as text
-%        str2double(get(hObject,'String')) returns contents of A2_Value as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function A2_Value_CreateFcn(hObject, ~, handles)
-% hObject    handle to A2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function B2_Value_Callback(hObject, ~, handles)
-% hObject    handle to B2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of B2_Value as text
-%        str2double(get(hObject,'String')) returns contents of B2_Value as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function B2_Value_CreateFcn(hObject, ~, handles)
-% hObject    handle to B2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
-
-
-
-function C2_Value_Callback(hObject, ~, handles)
-% hObject    handle to C2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of C2_Value as text
-%        str2double(get(hObject,'String')) returns contents of C2_Value as a double
-
-
-% --- Executes during object creation, after setting all properties.
-function C2_Value_CreateFcn(hObject, ~, handles)
-% hObject    handle to C2_Value (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 function send_request(handles, name, data)
-% funkcja s³u¿¹ca do wysy³ania poleceñ do robota
+% funkcja s³u¿¹ca do wysy³ania poleceñ do robota z zadan¹ pozycj¹
 % preconditions
 pre_mess = [0 1 0 15 1 0];
 value = double(num2str(data,5));
@@ -1532,7 +1530,7 @@ else
     fopen(Robot);
 end
 wait_for_idle_state(Robot, 2); % max timeout
-fwrite(Robot,mess);
+fwrite(Robot,mess);            % wys³anie wiadomoœci do robota
 handles.CommunicationSts = 1;
 
 
@@ -1541,6 +1539,8 @@ function Stop_Communication_Callback(hObject, ~, handles)
 % hObject    handle to Stop_Communication (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% funkacja s³u¿¹ca do zatrzymania komunikacji
 handles.CommunicationSts = 0;
 if isfield(handles, 'Robot') % obiek tcpip sprawdzenie czy by³a ju¿ rozpoczynana komunikacja
     
@@ -1566,6 +1566,7 @@ function Logs_Name_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of Logs_Name as text
 %        str2double(get(hObject,'String')) returns contents of Logs_Name as a double
 
+% nieobs³ugiwane wartoœæ u¿ywana w Save_As_txt_Callback
 
 % --- Executes during object creation, after setting all properties.
 function Logs_Name_CreateFcn(hObject, ~, handles)
@@ -1585,6 +1586,9 @@ function Save_As_txt_Callback(hObject, ~, handles)
 % hObject    handle to Save_As_txt (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+% funkcja s³u¿¹ca do zapisania danych pobranych przez Monitor_Callback do
+% pliku tesktowego
 global RobotData
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
     File_name = get(handles.Logs_Name,'String');
@@ -1652,13 +1656,22 @@ send_request(handles, 'XP1.Y', Y_pos);
 Z_pos = get(handles.S_Z,'Value');
 send_request(handles, 'XP1.Z', Z_pos);
 
+A_pos = get(handles.S_X,'Value');
+send_request(handles, 'XP5.A', A_pos);
+
+B_pos = get(handles.S_Y,'Value');
+send_request(handles, 'XP5.B', B_pos);
+
+C_pos = get(handles.S_Z,'Value');
+send_request(handles, 'XP5.C', C_pos);
+
 
 % --- Executes on button press in VIS_end_of_efector.
 function VIS_end_of_efector_Callback(hObject, ~, handles)
 % hObject    handle to VIS_end_of_efector (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+% funkcja wizualizuj¹ca pocycje koñcókie efektora w czasie
 global RobotData;
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
     time = [RobotData.time];
@@ -1697,6 +1710,8 @@ function VIS_velocity_Callback(hObject, ~, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% funkcja wizualizuj¹ca prêdkoœci Jointów robota w osi X Y Z oraz prêdkoœci
+% absolutnej koncówki efektora
 global RobotData;
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
     time = [RobotData.time];
@@ -1716,7 +1731,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     end
 
 
-    
+    % wyliczanie prêdkoœci Jointów 
     vJoint1 = differenction(Joint1, time);
     vJoint2 = differenction(Joint2, time);
     vJoint3 = differenction(Joint3, time);
@@ -1724,16 +1739,20 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     vJoint5 = differenction(Joint5, time);
     vJoint6 = differenction(Joint6, time);
     
+    %macierz prêdkoœci
     VJoints= [vJoint1; vJoint2; vJoint3; vJoint4; vJoint5; vJoint6];
     
+    % wyliczanie prêdkoœci X Y Z
     vX = differenction(X, time);
     vY = differenction(Y, time);
     vZ = differenction(Z, time);
     
+    % macierz prêdkoœci
     VXYZ = [vX; vY; vZ];
     
+    %prêdkoœæ absolutna
     V = sqrt(vX.^2 + vY.^2 + vZ.^2);
-    figure(3); %position of end of efector
+    figure(3); % Pedkoœæ
     
     subplot(3,1,1)
     title('Joint Velocity')
@@ -1768,6 +1787,8 @@ function VIS_acceleration_Callback(hObject, ~, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+% funkcja wizualizuj¹ca przyœpieszenia Jointów robota w osi X Y Z oraz prêdkoœci
+% absolutnej koncówki efektora
 global RobotData;
 if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData,'End')
     time = [RobotData.time];
@@ -1787,7 +1808,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     end
     
     
-    
+    % wyliczanie przyœpieszeñ jointów
     aJoint1 = differenction(differenction(Joint1, time),time);
     aJoint2 = differenction(differenction(Joint2, time),time);
     aJoint3 = differenction(differenction(Joint3, time),time);
@@ -1795,14 +1816,18 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     aJoint5 = differenction(differenction(Joint5, time),time);
     aJoint6 = differenction(differenction(Joint6, time),time);
     
+    % macierz przyœpieszeñ
     aJoints= [aJoint1; aJoint2; aJoint3; aJoint4; aJoint5; aJoint6];
     
+    % wyliczanie przyœpieszeñ pozycji
     aX = differenction(differenction(X, time),time);
     aY = differenction(differenction(Y, time),time);
     aZ = differenction(differenction(Z, time),time);
     
+    % macierz przyœpieszeñ
     AXYZ = [aX; aY; aZ];
     
+    % przyœpieszenie absolutne
     A = sqrt(aX.^2 + aY.^2 + aZ.^2);
     figure(4); 
     
@@ -1831,3 +1856,16 @@ else
     h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
     waitfor(h) 
 end
+
+
+% --- Executes on button press in Get_Real_Values.
+function Get_Real_Values_Callback(hObject, eventdata, handles)
+% hObject    handle to Get_Real_Values (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% funkcja wywo³uje funkcje Get_Position_XYZ_ABC tak aby mo¿na w dowolnym
+% odwo³aniu wywo³aæ ta funkcje - jak bêdzie taka potrzeba bêdzie mo¿na
+% dodac t¹ funkcje do wywo³ania  Get_Position_Callback
+handles = Get_Position_XYZ_ABC(handles); 
+guidata(hObject, handles);

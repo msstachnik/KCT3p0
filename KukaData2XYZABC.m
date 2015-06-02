@@ -1,9 +1,9 @@
-function Joints = KukaData2Joint(MessData)
-% funkcja s³u¿aca do konwersji wiadomoœci tcpip na 6 pozycji Jointów
+function Joints = KukaData2XYZABC(MessData)
+% funkcja s³u¿aca do konwersji wiadomoœci tcpip na 6 pozycji X Y Z A B C.
 
-Char_Data = char(MessData(:)');  % konwersja na string
+Char_Data = char(MessData(:)'); % konwersja na string
 
-ends_of_value = strfind(Char_Data,',') - 1;  % znalezienie wa¿nych znaczników koñca danyych - przecinków
+ends_of_value = strfind(Char_Data,',') - 1; % znalezienie wa¿nych znaczników koñca danyych - przecinków
 
 Joints = ones(1,6); %inicjalizacja tablicy
 for i=1:6
@@ -15,8 +15,8 @@ end
 
 
 function Y = getSigleValue(Char_Data, ends_of_value, Number)
-
-Y_start_char = strfind(Char_Data, strcat('A',num2str(Number))) + 3;
+Position = {'X','Y','Z','A','B','C'};
+Y_start_char = strfind(Char_Data, Position{Number}) + 2;
 if length(ends_of_value) >= Number                                  % pierwszy warunek czy d³ugosæ wiadomoœci jest ok
     Y_end_char = ends_of_value(Number);
     

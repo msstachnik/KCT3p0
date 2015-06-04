@@ -1757,25 +1757,27 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     figure(3); % Pedkoœæ
     
     subplot(3,1,1)
+    
+    plot(time, VJoints);
     title('Joint Velocity')
     xlabel('time [s]')
     ylabel('Joint speed [deg /s]')
-    plot(time, VJoints);
     legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
 
     subplot(3,1,2)
+    
+    plot(time, VXYZ);
     title('End of Effector Velocity')
     xlabel('time [s]')
     ylabel(' speed [mm /s]')
-    plot(time, VXYZ);
     legend('v_X', 'v_Y', 'v_Z');
     
     subplot(3,1,3)
+
+    plot(time, V);
     title('Absolute End of Effector Velocity')
     xlabel('time [s]')
     ylabel('speed [mm /s]')
-    plot(time, V);
-    
     
 else
     h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
@@ -1834,24 +1836,27 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     figure(4); 
     
     subplot(3,1,1)
+
+    plot(time, aJoints);
     title('Joint Acceleration')
     xlabel('time [s]')
     ylabel('Joint speed [deg /s]')
-    plot(time, aJoints);
     legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
 
     subplot(3,1,2)
+
+    plot(time, AXYZ);
     title('End of Effector Acceleration')
     xlabel('time [s]')
     ylabel(' speed [mm /s]')
-    plot(time, AXYZ);
     legend('v_X', 'v_Y', 'v_Z');
     
     subplot(3,1,3)
+
+    plot(time, A);
     title('Absolute End of Effector Acceleration')
     xlabel('time [s]')
     ylabel('speed [mm /s]')
-    plot(time, A);
     
     
 else

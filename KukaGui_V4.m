@@ -716,6 +716,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
         waitfor(h)                                          % poczekaj na zamkniêcie okna
         handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca strukturê robora KR6R900
         handles.Robot = Robot;
+        
     end
     
 else %w przeciwnym wypadku fail
@@ -724,6 +725,7 @@ else %w przeciwnym wypadku fail
 end
 handles.CommunicationSts = 1; % there is communication
 update_panels(handles) 
+handles = Get_Position_XYZ_ABC(handles); % pobieranie rzeczywistej pozcyji z robota
 guidata(hObject, handles);
 
 
@@ -819,12 +821,10 @@ else %w przeciwnym wypadku fail
 end
 handles.CommunicationSts = 1;
 update_panels(handles) 
+handles = Get_Position_XYZ_ABC(handles); % pobieranie rzeczywistej pozcyji z robota
 guidata(hObject, handles);
 
-function Get_Position_XYZ_ABC(handles)
-% hObject    handle to Get_Position (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+function handles = Get_Position_XYZ_ABC(handles)
 
 %funkcja wywo³ywana w update_panels s³u¿y do pobrania rzeczywistych pozycji
 %robota X Y Z A C B i zaktualizowana struktury robota, struktura ta mo¿e
@@ -935,12 +935,14 @@ while time < timeout
         else % jeœli wszystko ok
             RobotData(i).time = toc;
             RobotData(i).Joints = Joints;
+            handles = Get_Position_XYZ_ABC(handles); % pobieranie rzeczywistej pozcyji z robota
             handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
             RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z handles.KR6R900.End.A1 handles.KR6R900.End.B1 handles.KR6R900.End.C1];
             set(handles.Number_of_Data, 'String',i); % zaktualizuj wartosæ Numbre of data na panelu
             i = i+1;
             handles.Robot = Robot;
-
+            
+            
         end
 
     else %w przeciwnym wypadku fail

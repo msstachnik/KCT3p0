@@ -744,20 +744,21 @@ handles.KR6R900 = kctdisprobot_V4(handles.KR6R900);
 function wait_for_BytesAvailable(oRobot, fTimeout) %in seconds
 % funkcja s³u¿¹ca do oczekiwania na stan spoczynku sieci komunikacyjnej z
 % uwzglenieniem odebrania woadomoœci z aktualna pozycj¹ robota
-interval = 0.01;
+interval = 0.0001;
 time = interval;
 
 while time < fTimeout
-    pause(interval)
-    time = time + interval;
+    
     
     if strcmp(oRobot.TransferStatus, 'idle') && oRobot.BytesAvailable > 0
         % jeœli jest ju¿ w iddle to mo¿na dzia³aæ dalej
         break;
     end
+    pause(interval)
+    time = time + interval;
     
 end
-pause(interval)
+% pause(interval)
 
 function wait_for_idle_state(oRobot, fTimeout) %in seconds
 % funkcja s³u¿¹ca do oczekiwania na stan spoczynku sieci komunikacyjnej
@@ -853,8 +854,8 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
     XYZ_ABC = KukaData2XYZABC(joint_message); % wyciagniêcie z ramki 6 pozcyji
     
     if sum(isnan(XYZ_ABC)) > 0 % obs³uga b³êdu
-        h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Position read:', num2str(Joints)},'Fail');
-        waitfor(h)                                          % poczekaj na zamkniêcie okna
+%         h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Position read:', num2str(XYZ_ABC)},'Fail');
+%         waitfor(h)                                          % poczekaj na zamkniêcie okna
     else % jeœli wszystko ok
 
         handles.KR6R900.Real.X = XYZ_ABC(1); % pobranie informacji do struktury handles
@@ -866,6 +867,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
         handles.Robot = Robot;
         
         % zaktualizowanie pól tekstowych
+        if handles.KR6R900.display == 1
         precision = 5;
         set(handles.X_Value_Robot, 'String', num2str(XYZ_ABC(1), precision));  
         set(handles.Y_Value_Robot, 'String', num2str(XYZ_ABC(2), precision));  
@@ -873,6 +875,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
         set(handles.A_Value_Robot, 'String', num2str(XYZ_ABC(4), precision));  
         set(handles.B_Value_Robot, 'String', num2str(XYZ_ABC(5), precision));  
         set(handles.C_Value_Robot, 'String', num2str(XYZ_ABC(6), precision));  
+        end
         
     end
     
@@ -938,10 +941,17 @@ while time < timeout
             handles = Get_Position_XYZ_ABC(handles); % pobieranie rzeczywistej pozcyji z robota
             handles = Update_GUI_by_Joints(Joints, handles);    % kompleksowa funkcja aktualizuj¹ca GUI
             RobotData(i).End = [handles.KR6R900.End.X handles.KR6R900.End.Y handles.KR6R900.End.Z handles.KR6R900.End.A1 handles.KR6R900.End.B1 handles.KR6R900.End.C1];
-            set(handles.Number_of_Data, 'String',i); % zaktualizuj wartosæ Numbre of data na panelu
+            RobotData(i).Real.X = handles.KR6R900.Real.X;
+            RobotData(i).Real.Y = handles.KR6R900.Real.Y;
+            RobotData(i).Real.Z = handles.KR6R900.Real.Z;
+            RobotData(i).Real.A = handles.KR6R900.Real.A;
+            RobotData(i).Real.B = handles.KR6R900.Real.B;
+            RobotData(i).Real.C = handles.KR6R900.Real.C;
+            
             i = i+1;
             handles.Robot = Robot;
-            
+            set(handles.Number_of_Data, 'String',i); % zaktualizuj wartosæ Numbre of data na panelu
+
             
         end
 
@@ -956,7 +966,7 @@ while time < timeout
     
     time = toc; %weŸ aktualna wartosæ czasu
     set(handles.Actual_time, 'String',time); % zaktualizuj wartosæ czasu na panelu
-    
+
 end
 handles.CommunicationSts = 1;
 update_panels(handles) 
@@ -1062,9 +1072,25 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     title('Joint 6')
     xlabel('time [s]')
     ylabel('position [deg]')
-    
 
-    
+    Joint1_sum = sum(abs(diff(Joint1)));
+    Joint2_sum = sum(abs(diff(Joint2)));
+    Joint3_sum = sum(abs(diff(Joint3)));
+    Joint4_sum = sum(abs(diff(Joint4)));
+    Joint5_sum = sum(abs(diff(Joint5)));
+    Joint6_sum = sum(abs(diff(Joint6)));
+    disp('Joint 1 suma przemieszczenia');
+    disp(Joint1_sum);
+    disp('Joint 2 suma przemieszczenia');
+    disp(Joint2_sum);
+    disp('Joint 3 suma przemieszczenia');
+    disp(Joint3_sum);
+    disp('Joint 4 suma przemieszczenia');
+    disp(Joint4_sum);
+    disp('Joint 5 suma przemieszczenia');
+    disp(Joint5_sum);
+    disp('Joint 6 suma przemieszczenia');
+    disp(Joint6_sum);
     
 else
     h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
@@ -1137,7 +1163,7 @@ X_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_X, 'Min');
 Max = get(handles.S_X, 'Max');
 
-if isnumeric(Value) && X_pos >= Min && X_pos <= Max
+if isnumeric(X_pos) && X_pos >= Min && X_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_X, 'String', X_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_X, 'Value', X_pos);                 % zaktualizuj wartoœc slidera
@@ -1211,7 +1237,7 @@ Y_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_Y, 'Min');
 Max = get(handles.S_Y, 'Max');
 
-if isnumeric(Value) && Y_pos >= Min && Y_pos <= Max
+if isnumeric(Y_pos) && Y_pos >= Min && Y_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_Y, 'String', Y_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_Y, 'Value', Y_pos);                 % zaktualizuj wartoœc slidera
@@ -1278,7 +1304,7 @@ Z_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_Z, 'Min');
 Max = get(handles.S_Z, 'Max');
 
-if isnumeric(Value) && Z_pos >= Min && Z_pos <= Max
+if isnumeric(Z_pos) && Z_pos >= Min && Z_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_Z, 'String', Z_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_Z, 'Value', Z_pos);                 % zaktualizuj wartoœc slidera
@@ -1312,7 +1338,7 @@ function S_A_Callback(hObject, ~, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 A_pos = get(hObject,'Value');
 set(handles.A_value, 'String', num2str(A_pos, 3)); 
-send_request(handles, 'XP5.A', A_pos)
+send_request(handles, 'XP1.A', A_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1345,11 +1371,11 @@ A_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_A, 'Min');
 Max = get(handles.S_A, 'Max');
 
-if isnumeric(Value) && A_pos >= Min && A_pos <= Max
+if isnumeric(A_pos) && A_pos >= Min && A_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_A, 'String', A_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_A, 'Value', A_pos);                 % zaktualizuj wartoœc slidera
-    send_request(handles, 'XP5.A', A_pos)
+    send_request(handles, 'XP1.A', A_pos)
 else
     %jeœli nie jest ok zachowaj poprzednia wartosæ
     set(hObject, 'String', get(handles.S_A, 'Value'));                         % obs³uga b³êdnej wartoœci
@@ -1413,11 +1439,11 @@ B_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_B, 'Min');
 Max = get(handles.S_B, 'Max');
 
-if isnumeric(Value) && B_pos >= Min && B_pos <= Max
+if isnumeric(B_pos) && B_pos >= Min && B_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_B, 'String', B_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_B, 'Value', B_pos);                 % zaktualizuj wartoœc slidera
-    send_request(handles, 'XP5.B', B_pos)
+    send_request(handles, 'XP1.B', B_pos)
 else
     %jeœli nie jest ok zachowaj poprzednia wartosæ
     set(hObject, 'String', get(handles.S_B, 'Value'));                         % obs³uga b³êdnej wartoœci
@@ -1449,7 +1475,7 @@ function S_C_Callback(hObject, ~, handles)
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 C_pos = get(hObject,'Value');
 set(handles.C_value, 'String', num2str(C_pos, 3)); 
-send_request(handles, 'XP5.C', C_pos)
+send_request(handles, 'XP1.C', C_pos)
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -1482,11 +1508,11 @@ C_pos = str2double(get(hObject,'String'));
 Min = get(handles.S_C, 'Min');
 Max = get(handles.S_C, 'Max');
 
-if isnumeric(Value) && C_pos >= Min && C_pos <= Max
+if isnumeric(C_pos) && C_pos >= Min && C_pos <= Max
     % jeœli wszystko jest ok aktualizuj slider i wyœlij polecenie do robota
     set(handles.S_C, 'String', C_pos);                % zaktualizuj wartoœc slidera
     set(handles.S_C, 'Value', C_pos);                 % zaktualizuj wartoœc slidera
-    send_request(handles, 'XP5.C', C_pos)
+    send_request(handles, 'XP1.C', C_pos)
 else
     %jeœli nie jest ok zachowaj poprzednia wartosæ
     set(hObject, 'String', get(handles.S_C, 'Value'));                         % obs³uga b³êdnej wartoœci
@@ -1610,15 +1636,22 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
         A(i) = RobotData(i).End(4);
         B(i) = RobotData(i).End(5);
         C(i) = RobotData(i).End(6);
+        X_real(i) = RobotData(i).Real.X;
+        Y_real(i) = RobotData(i).Real.Y;
+        Z_real(i) = RobotData(i).Real.Z;
+        A_real(i) = RobotData(i).Real.A;
+        B_real(i) = RobotData(i).Real.B;
+        C_real(i) = RobotData(i).Real.C;
+        
     end
-    header = 'time	Joint1	Joint2	Joint3	Joint4	Joint5	Joint6	X	Y	Z	A	B	C';
+    header = 'time	Joint1	Joint2	Joint3	Joint4	Joint5	Joint6	X	Y	Z	A	B	C X_real Y_real Z_real A_real B_real C_real';
     % Data = [time' Joint1' Joint2' Joint3' Joint4' Joint5' Joint6' X' Y' Z' A' B' C'];
     % Data = [time Joint1 Joint2 Joint3 Joint4 Joint5 Joint6 X Y Z A B C];
-    Data_format = '%12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f \n';
+    Data_format = '%12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f %12.4f \n';
     file = fopen(File_name,'wt');
     fprintf(file, '%50s\n', header);
     for i=1:length(time)
-        Data = [time(i) Joint1(i) Joint2(i) Joint3(i) Joint4(i) Joint5(i) Joint6(i) X(i) Y(i) Z(i) A(i) B(i) C(i)];
+        Data = [time(i) Joint1(i) Joint2(i) Joint3(i) Joint4(i) Joint5(i) Joint6(i) X(i) Y(i) Z(i) A(i) B(i) C(i) X_real(i) Y_real(i) Z_real(i) A_real(i) B_real(i) C_real(i)];
         fprintf(file, Data_format, Data);
     end
     fclose(file);
@@ -1659,13 +1692,13 @@ Z_pos = get(handles.S_Z,'Value');
 send_request(handles, 'XP1.Z', Z_pos);
 
 A_pos = get(handles.S_X,'Value');
-send_request(handles, 'XP5.A', A_pos);
+send_request(handles, 'XP1.A', A_pos);
 
 B_pos = get(handles.S_Y,'Value');
-send_request(handles, 'XP5.B', B_pos);
+send_request(handles, 'XP1.B', B_pos);
 
 C_pos = get(handles.S_Z,'Value');
-send_request(handles, 'XP5.C', C_pos);
+send_request(handles, 'XP1.C', C_pos);
 
 
 % --- Executes on button press in VIS_end_of_efector.
@@ -1753,7 +1786,9 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     VXYZ = [vX; vY; vZ];
     
     %prêdkoœæ absolutna
-    V = sqrt(vX.^2 + vY.^2 + vZ.^2);
+    V = sqrt(vJoint1.^2)+sqrt(vJoint2.^2)+sqrt(vJoint3.^2)+sqrt(vJoint4.^2)+sqrt(vJoint5.^2)+sqrt(vJoint6.^2) ;
+
+    %V = sqrt(vX.^2 + vY.^2 + vZ.^2);
     figure(3); % Pedkoœæ
     
     subplot(3,1,1)
@@ -1775,10 +1810,19 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     subplot(3,1,3)
 
     plot(time, V);
-    title('Absolute End of Effector Velocity')
+    title('Absolute Joint Velocity')
     xlabel('time [s]')
-    ylabel('speed [mm /s]')
+    ylabel('Joints speed [deg /s]')
     
+    Joint1_sum = sum(abs(diff(vJoint1)));
+    Joint2_sum = sum(abs(diff(vJoint2)));
+    Joint3_sum = sum(abs(diff(vJoint3)));
+    Joint4_sum = sum(abs(diff(vJoint4)));
+    Joint5_sum = sum(abs(diff(vJoint5)));
+    Joint6_sum = sum(abs(diff(vJoint6)));
+    disp('Suma prêdkoœci');
+    disp(sum([Joint1_sum Joint2_sum Joint3_sum Joint4_sum Joint5_sum Joint6_sum]));
+
 else
     h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia
     waitfor(h) 
@@ -1832,7 +1876,8 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     AXYZ = [aX; aY; aZ];
     
     % przyœpieszenie absolutne
-    A = sqrt(aX.^2 + aY.^2 + aZ.^2);
+    A = sqrt(aJoint1.^2)+sqrt(aJoint2.^2)+sqrt(aJoint3.^2)+sqrt(aJoint4.^2)+sqrt(aJoint5.^2)+sqrt(aJoint6.^2) ;
+    %A = sqrt(aX.^2 + aY.^2 + aZ.^2);
     figure(4); 
     
     subplot(3,1,1)
@@ -1840,7 +1885,7 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     plot(time, aJoints);
     title('Joint Acceleration')
     xlabel('time [s]')
-    ylabel('Joint speed [deg /s]')
+    ylabel('Joint speed [deg /s^2]')
     legend('Joint 1', 'Joint 2', 'Joint 3', 'Joint 4', 'Joint 5', 'Joint 6');
 
     subplot(3,1,2)
@@ -1848,16 +1893,24 @@ if isfield(RobotData,'time') && isfield(RobotData,'Joints') && isfield(RobotData
     plot(time, AXYZ);
     title('End of Effector Acceleration')
     xlabel('time [s]')
-    ylabel(' speed [mm /s]')
+    ylabel(' speed [mm /s^2]')
     legend('v_X', 'v_Y', 'v_Z');
     
     subplot(3,1,3)
 
     plot(time, A);
-    title('Absolute End of Effector Acceleration')
+    title('Absolute Joint Acceleration')
     xlabel('time [s]')
-    ylabel('speed [mm /s]')
+    ylabel('Joint speed [deg /s^2]')
     
+    Joint1_sum = sum(abs(diff(aJoint1)));
+    Joint2_sum = sum(abs(diff(aJoint2)));
+    Joint3_sum = sum(abs(diff(aJoint3)));
+    Joint4_sum = sum(abs(diff(aJoint4)));
+    Joint5_sum = sum(abs(diff(aJoint5)));
+    Joint6_sum = sum(abs(diff(aJoint6)));
+    disp('Suma przyœpieszeñ');
+    disp(sum([Joint1_sum Joint2_sum Joint3_sum Joint4_sum Joint5_sum Joint6_sum]));    
     
 else
     h = msgbox('No data'); % jeœli nie ma nic do wyœwietlenia

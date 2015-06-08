@@ -313,6 +313,7 @@ function ROBOT = kctdisprobot_V4(ROBOT)
         ROBOT.End.C1 = angle_in_180_resolution(90+radtodeg(atan2(-rMtx(3,1),cos(B)*rMtx(1,1) + sin(B)*rMtx(2,1))));
 %         disp([ROBOT.End.A1,ROBOT.End.B1,ROBOT.End.C1])
 %         ROBOT = rotox_to_angles(rMtx, ROBOT); wersja do testow
+% http://en.wikibooks.org/wiki/Robotics_Kinematics_and_Dynamics/Description_of_Position_and_Orientation
         
         
 

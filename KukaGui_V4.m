@@ -840,8 +840,7 @@ else
 end
 
 if strcmp(Robot.Status,'open') %sprawdzenie czy Robot jest ju¿ w stanie open
-    
-else
+    else
     fopen(Robot);
 end
 
@@ -854,8 +853,8 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
     XYZ_ABC = KukaData2XYZABC(joint_message); % wyciagniêcie z ramki 6 pozcyji
     
     if sum(isnan(XYZ_ABC)) > 0 % obs³uga b³êdu
-%         h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Position read:', num2str(XYZ_ABC)},'Fail');
-%         waitfor(h)                                          % poczekaj na zamkniêcie okna
+         h = msgbox({'Wrong meesage format.', 'Message read:',char(joint_message'), 'Position read:', num2str(XYZ_ABC)},'Fail');
+         waitfor(h)                                          % poczekaj na zamkniêcie okna
     else % jeœli wszystko ok
 
         handles.KR6R900.Real.X = XYZ_ABC(1); % pobranie informacji do struktury handles
@@ -866,7 +865,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
         handles.KR6R900.Real.C = XYZ_ABC(6);
         handles.Robot = Robot;
         
-        % zaktualizowanie pól tekstowych
+%         zaktualizowanie pól tekstowych
         if handles.KR6R900.display == 1
         precision = 5;
         set(handles.X_Value_Robot, 'String', num2str(XYZ_ABC(1), precision));  
@@ -881,7 +880,7 @@ if Robot.BytesAvailable > 0 %warunek pojawienia siê wiadomoœci
     
 else %w przeciwnym wypadku fail
     h = msgbox('Communication of POS_ACT Failed', 'Fail');
-    waitfor(h)  
+   waitfor(h)  
 
 end
 handles.CommunicationSts = 1;
